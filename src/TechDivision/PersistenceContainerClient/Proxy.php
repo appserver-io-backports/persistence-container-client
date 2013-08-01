@@ -101,8 +101,8 @@ class Proxy implements RemoteObject {
     /**
      * Invokes the remote execution of the passed remote method.
      * 
-     * @param TechDivision\PersistenceContainerClient\Interfaces\RemoteMethod $methodCall The remote method call instance
-     * @param TechDivision\PersistenceContainerClient\Interfaces\Session $session The session with the connection instance to use
+     * @param \TechDivision\PersistenceContainerClient\Interfaces\RemoteMethod $methodCall The remote method call instance
+     * @param \TechDivision\PersistenceContainerClient\Interfaces\Session $session The session with the connection instance to use
      */
     public function __invoke(RemoteMethod $methodCall, Session $session) {
         return $this->setSession($session)->getSession()->send($methodCall);
@@ -112,7 +112,7 @@ class Proxy implements RemoteObject {
      * Factory method to create a new instance of the requested proxy implementation.
      * 
      * @param string $className The name of the class to create the proxy for
-     * @return TechDivision\PersistenceContainerClient\Interfaces\RemoteObject The proxy instance
+     * @return \TechDivision\PersistenceContainerClient\Interfaces\RemoteObject The proxy instance
      */
     public static function create($className) {
         return new Proxy($className);
