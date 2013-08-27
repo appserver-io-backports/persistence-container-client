@@ -58,7 +58,6 @@ class ContextConnectionSingleSocket implements Connection {
      * @return void
      */
     public function __construct() {
-        // initialize the ArrayObject for the sessions
         $this->sessions = new \ArrayObject();
     }
     
@@ -67,16 +66,13 @@ class ContextConnectionSingleSocket implements Connection {
      * 
      * @return void
      */
-    public function __destruct() {
-        $this->getSocket()->close();
-    }
+    public function __destruct() {}
 
     /**
      * (non-PHPdoc)
      * @see TechDivision\PersistenceContainerClient\Interfaces\Connection::connect()
      */
     public function connect() {
-        // start the client
         $client = new Client($this->getAddress(), $this->getPort());
         $this->setSocket($client->start()->setBlock());
     }
@@ -85,8 +81,7 @@ class ContextConnectionSingleSocket implements Connection {
      * (non-PHPdoc)
      * @see TechDivision\PersistenceContainerClient\Interfaces\Connection::disconnect()
      */
-    public function disconnect() {
-    }
+    public function disconnect() {}
 
     /**
      * Sets the socket to use for the client connection, a Socket instance by default.
