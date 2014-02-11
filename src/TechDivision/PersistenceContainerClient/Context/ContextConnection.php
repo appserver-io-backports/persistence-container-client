@@ -8,6 +8,15 @@
  * This source file is subject to the Open Software License (OSL 3.0)
  * that is available through the world-wide-web at this URL:
  * http://opensource.org/licenses/osl-3.0.php
+ *
+ * PHP version 5
+ *
+ * @category  Appserver
+ * @package   TechDivision_PersistenceContainerClient
+ * @author    Tim Wagner <tw@techdivision.com>
+ * @copyright 2014 TechDivision GmbH <info@techdivision.com>
+ * @license   http://opensource.org/licenses/osl-3.0.php Open Software License (OSL 3.0)
+ * @link      http://www.appserver.io
  */
 
 namespace TechDivision\PersistenceContainerClient\Context;
@@ -19,35 +28,42 @@ use TechDivision\PersistenceContainerClient\Interfaces\RemoteMethod;
 
 /**
  * Connection implementation to invoke a remote method call over a socket.
- *
- * @package     TechDivision\PersistenceContainerClient
- * @copyright  	Copyright (c) 2010 <info@techdivision.com> - TechDivision GmbH
- * @license    	http://opensource.org/licenses/osl-3.0.php
- *              Open Software License (OSL 3.0)
- * @author      Tim Wagner <tw@techdivision.com>
+ * 
+ * @category   Appserver
+ * @package    TechDivision_PersistenceContainerClient
+ * @subpackage Context
+ * @author     Tim Wagner <tw@techdivision.com>
+ * @copyright  2014 TechDivision GmbH <info@techdivision.com>
+ * @license    http://opensource.org/licenses/osl-3.0.php Open Software License (OSL 3.0)
+ * @link       http://www.appserver.io
  */
-class ContextConnectionSingleSocket implements Connection {
+class ContextConnection implements Connection
+{
 
     /**
      * The client socket's IP address.
+     * 
      * @var string
      */
     protected $address = '127.0.0.1';
 
     /**
      * The client socket's port.
+     * 
      * @var integer
      */
     protected $port = 8585;
 
     /**
      * The ArrayObject for the sessions.
+     * 
      * @var ArrayObject
      */
     protected $sessions = null;
 
     /**
      * The client socket instance.
+     * 
      * @var \TechDivision\Socket\Client
      */
     protected $client = null;
@@ -57,7 +73,8 @@ class ContextConnectionSingleSocket implements Connection {
      * 
      * @return void
      */
-    public function __construct() {
+    public function __construct()
+    {
         $this->sessions = new \ArrayObject();
     }
     
@@ -66,38 +83,53 @@ class ContextConnectionSingleSocket implements Connection {
      * 
      * @return void
      */
-    public function __destruct() {}
+    public function __destruct()
+    {
+    }
 
     /**
-     * (non-PHPdoc)
+     * Creates the connection to the container.
+     * 
+     * @return void
      * @see TechDivision\PersistenceContainerClient\Interfaces\Connection::connect()
      */
-    public function connect() {
+    public function connect()
+    {
         $client = new Client($this->getAddress(), $this->getPort());
         $this->setSocket($client->start()->setBlock());
     }
 
     /**
-     * (non-PHPdoc)
+     * Shutdown the connection to the container.
+     * 
+     * @return void
      * @see TechDivision\PersistenceContainerClient\Interfaces\Connection::disconnect()
      */
-    public function disconnect() {}
+    public function disconnect()
+    {
+    }
 
     /**
      * Sets the socket to use for the client connection, a Socket instance by default.
      * 
-     * @param \TechDivision\Socket\Client $socket
+     * @param \TechDivision\Socket\Client $socket The client socket
+     * 
+     * @return \TechDivision\PersistenceContainerClient\Context\ContextConnectionSingleSocket The instance itself
      */
-    public function setSocket(Client $socket) {
+    public function setSocket(Client $socket)
+    {
         $this->socket = $socket;
         return $this;
     }
 
     /**
-     * (non-PHPdoc)
+     * Returns the socket the connection is based on.
+     * 
+     * @return \TechDivision\Socket\Client The socket instance
      * @see TechDivision\PersistenceContainerClient\Interfaces\Connection::getSocket()
      */
-    public function getSocket() {
+    public function getSocket()
+    {
         return $this->socket;
     }
 
@@ -105,8 +137,11 @@ class ContextConnectionSingleSocket implements Connection {
      * Set's the server's IP address for the client to connect to.
      * 
      * @param string $address The server's IP address to connect to
+     * 
+     * @return \TechDivision\PersistenceContainerClient\Context\ContextConnectionSingleSocket The instance itself
      */
-    public function setAddress($address) {
+    public function setAddress($address)
+    {
         $this->address = $address;
         return $this;
     }
@@ -116,7 +151,8 @@ class ContextConnectionSingleSocket implements Connection {
      * 
      * @return string
      */
-    public function getAddress() {
+    public function getAddress()
+    {
         return $this->address;
     }
 
@@ -124,8 +160,11 @@ class ContextConnectionSingleSocket implements Connection {
      *  Set's  the server's port for the client to connect to.
      * 
      * @param int $port The server's port to connect to
+     * 
+     * @return void
      */
-    public function setPort($port) {
+    public function setPort($port)
+    {
         $this->port = $port;
     }
 
@@ -134,18 +173,26 @@ class ContextConnectionSingleSocket implements Connection {
      * 
      * @return string
      */
-    public function getPort() {
+    public function getPort()
+    {
         return $this->port;
     }
 
     /**
-     * (non-PHPdoc)
+     * Sends the remote method call to the container instance.
+     * 
+     * @param TechDivision\PersistenceContainerClient\Interfaces\RemoteMethod $remoteMethod The remote method instance
+     * 
+     * @return mixed The response from the container
      * @see TechDivision\PersistenceContainerClient\Interfaces\Connection::send()
      */
-    public function send(RemoteMethod $remoteMethod) {
+    public function send(RemoteMethod $remoteMethod)
+    {
 
+        // load the socket instance
         $socket = $this->getSocket();
 
+        // set address + port
         $remoteMethod->setAddress($this->getAddress());
         $remoteMethod->setPort($this->getPort());
 
@@ -162,16 +209,19 @@ class ContextConnectionSingleSocket implements Connection {
         if ($response instanceof \Exception) {
             throw $response;
         }
+        
         // return the data
         return $response;
     }
 
     /**
-     * (non-PHPdoc)
+     * Initializes a new session instance.
+     * 
+     * @return TechDivision\PersistenceContainerClient\Interfaces\Session The session instance
      * @see TechDivision\PersistenceContainerClient\Interfaces\Connection::createContextSession()
      */
-    public function createContextSession() {
+    public function createContextSession()
+    {
         return $this->sessions[] = $session = new ContextSession($this);
     }
-
 }
