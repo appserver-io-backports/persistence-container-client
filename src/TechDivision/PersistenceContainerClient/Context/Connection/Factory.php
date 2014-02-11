@@ -8,23 +8,38 @@
  * This source file is subject to the Open Software License (OSL 3.0)
  * that is available through the world-wide-web at this URL:
  * http://opensource.org/licenses/osl-3.0.php
+ *
+ * PHP version 5
+ *
+ * @category  Appserver
+ * @package   TechDivision_PersistenceContainerClient
+ * @author    Tim Wagner <tw@techdivision.com>
+ * @copyright 2014 TechDivision GmbH <info@techdivision.com>
+ * @license   http://opensource.org/licenses/osl-3.0.php Open Software License (OSL 3.0)
+ * @link      http://www.appserver.io
  */
 
 namespace TechDivision\PersistenceContainerClient\Context\Connection;
 
+use TechDivision\PersistenceContainerClient\Context\ContextConnection;
+
 /**
  * Connection factory to create a new context connection.
- *
- * @package     TechDivision\PersistenceContainerClient
- * @copyright  	Copyright (c) 2010 <info@techdivision.com> - TechDivision GmbH
- * @license    	http://opensource.org/licenses/osl-3.0.php
- *              Open Software License (OSL 3.0)
- * @author      Tim Wagner <tw@techdivision.com>
+ * 
+ * @category   Appserver
+ * @package    TechDivision_PersistenceContainerClient
+ * @subpackage Context
+ * @author     Tim Wagner <tw@techdivision.com>
+ * @copyright  2014 TechDivision GmbH <info@techdivision.com>
+ * @license    http://opensource.org/licenses/osl-3.0.php Open Software License (OSL 3.0)
+ * @link       http://www.appserver.io
  */
-class Factory {
+class Factory
+{
 
     /**
      * The instance as singleton.
+     * 
      * @var \TechDivision\PersistenceContainerClient\Interfaces\Connection 
      */
     protected static $instance = null;
@@ -33,18 +48,13 @@ class Factory {
      * Simple factory to create a new context connection 
      * of the requested type.
      * 
-     * @param string $type The context connection type to create
      * @return \TechDivision\PersistenceContainerClient\Interfaces\Connection The requested context connection
      */
-    public static function createContextConnection($type = 'SingleSocket') {
-        
+    public static function createContextConnection()
+    {
         if (self::$instance == null) {
-            $className = "TechDivision\PersistenceContainerClient\Context\ContextConnection$type";
-            $reflectionClass = new \ReflectionClass($className);
-            self::$instance = $reflectionClass->newInstance();
+            self::$instance = new ContextConnection();
         }
-        
         return self::$instance;
     }
-
 }

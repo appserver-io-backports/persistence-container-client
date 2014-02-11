@@ -8,6 +8,15 @@
  * This source file is subject to the Open Software License (OSL 3.0)
  * that is available through the world-wide-web at this URL:
  * http://opensource.org/licenses/osl-3.0.php
+ *
+ * PHP version 5
+ *
+ * @category  Appserver
+ * @package   TechDivision_PersistenceContainerClient
+ * @author    Tim Wagner <tw@techdivision.com>
+ * @copyright 2014 TechDivision GmbH <info@techdivision.com>
+ * @license   http://opensource.org/licenses/osl-3.0.php Open Software License (OSL 3.0)
+ * @link      http://www.appserver.io
  */
 
 namespace TechDivision\PersistenceContainerClient\Context;
@@ -19,75 +28,94 @@ use TechDivision\PersistenceContainerClient\Proxy\InitialContext;
 
 /**
  * The interface for the remote connection.
- *
- * @package     TechDivision\PersistenceContainerClient
- * @copyright  	Copyright (c) 2010 <info@techdivision.com> - TechDivision GmbH
- * @license    	http://opensource.org/licenses/osl-3.0.php
- *              Open Software License (OSL 3.0)
- * @author      Tim Wagner <tw@techdivision.com>
+ * 
+ * @category   Appserver
+ * @package    TechDivision_PersistenceContainerClient
+ * @subpackage Context
+ * @author     Tim Wagner <tw@techdivision.com>
+ * @copyright  2014 TechDivision GmbH <info@techdivision.com>
+ * @license    http://opensource.org/licenses/osl-3.0.php Open Software License (OSL 3.0)
+ * @link       http://www.appserver.io
  */
-class ContextSession implements Session {
+class ContextSession implements Session
+{
 
     /**
      * The connection instance.
+     * 
      * @var TechDivision\PersistenceContainerClient\Interfaces\Connection
      */
-    protected $_connection = null;
+    protected $connection = null;
 
     /**
      * The session ID used for the connection.
+     * 
      * @var string
      */
-    protected $_sessionId = null;
+    protected $sessionId = null;
 
     /**
+     * Initializes the session with the connection.
      * 
-     * @param TechDivision\PersistenceContainerClient\Interfaces\Connection $connection
-     * @todo Refactor session handling
+     * @param TechDivision\PersistenceContainerClient\Interfaces\Connection $connection The connection for the session
+     * 
+     * @return void
      */
-    public function __construct(Connection $connection) {
-        $this->_connection = $connection;
+    public function __construct(Connection $connection)
+    {
+        // initialize the connection
+        $this->connection = $connection;
         // check if already a session id exists in the session
-        if (($this->_sessionId = session_id()) == null) {
+        if (($this->sessionId = session_id()) == null) {
             // if not, create a unique ID
-            $this->_sessionId = uniqid();
+            $this->sessionId = uniqid();
         }
     }
 
     /**
-     * (non-PHPdoc)
+     * Returns the ID of the session to use.
+     * 
+     * @return string The session ID
      * @see TechDivision\PersistenceContainerClient\Interfaces\Session::getSessionId()
      */
-    public function getSessionId() {
-        return $this->_sessionId;
+    public function getSessionId()
+    {
+        return $this->sessionId;
     }
 
     /**
-     * (non-PHPdoc)
+     * Invokes the remote method over the connection.
+     *  
+     * @param \TechDivision\PersistenceContainerClient\Interfaces\RemoteMethod $remoteMethod The remote method call to invoke
+     * 
+     * @return mixed the method return value
      * @see TechDivision\PersistenceContainerClient\Interfaces\Session::send()
      * @todo Refactor to replace check for 'setSession' method, e. g. check for an interface
      */
-    public function send(RemoteMethod $remoteMethod) {
+    public function send(RemoteMethod $remoteMethod)
+    {
         // connect to the container
-        $this->_connection->connect();
-        $response = $this->_connection->send($remoteMethod);
+        $this->connection->connect();
+        $response = $this->connection->send($remoteMethod);
         // check if a proxy has been returned
         if (method_exists($response, 'setSession')) {
             $response->setSession($this);
         }
         // close the connection
-        $this->_connection->disconnect();
+        $this->connection->disconnect();
         return $response;
     }
 
     /**
-     * (non-PHPdoc)
+     * Creates a remote inital context instance.
+     * 
+     * @return \TechDivision\PersistenceContainerClient\Interfaces\RemoteObject The proxy for the inital context
      * @see TechDivision\PersistenceContainerClient\Interfaces\Session::createInitialContext()
      */
-    public function createInitialContext() {
+    public function createInitialContext()
+    {
         $initialContext = new InitialContext();
         $initialContext->setSession($this);
         return $initialContext;
     }
-
 }
