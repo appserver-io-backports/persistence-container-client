@@ -114,7 +114,7 @@ class ContextConnection implements Connection
      * 
      * @param \TechDivision\Socket\Client $socket The client socket
      * 
-     * @return \TechDivision\PersistenceContainerClient\Context\ContextConnectionSingleSocket The instance itself
+     * @return \TechDivision\PersistenceContainerClient\Context\ContextConnection The instance itself
      */
     public function setSocket(Client $socket)
     {
@@ -134,11 +134,11 @@ class ContextConnection implements Connection
     }
 
     /**
-     * Set's the server's IP address for the client to connect to.
+     * Set's the servers IP address for the client to connect to.
      * 
-     * @param string $address The server's IP address to connect to
+     * @param string $address The servers IP address to connect to
      * 
-     * @return \TechDivision\PersistenceContainerClient\Context\ContextConnectionSingleSocket The instance itself
+     * @return \TechDivision\PersistenceContainerClient\Context\ContextConnection The instance itself
      */
     public function setAddress($address)
     {
@@ -147,7 +147,7 @@ class ContextConnection implements Connection
     }
 
     /**
-     * Returns the client socket's IP address.
+     * Returns the client sockets IP address.
      * 
      * @return string
      */
@@ -157,9 +157,9 @@ class ContextConnection implements Connection
     }
 
     /**
-     *  Set's  the server's port for the client to connect to.
+     *  Set's  the servers port for the client to connect to.
      * 
-     * @param int $port The server's port to connect to
+     * @param integer $port The servers port to connect to
      * 
      * @return void
      */
@@ -169,9 +169,9 @@ class ContextConnection implements Connection
     }
 
     /**
-     * Returns the client socket's port.
+     * Returns the client port.
      * 
-     * @return string
+     * @return integer The client port
      */
     public function getPort()
     {

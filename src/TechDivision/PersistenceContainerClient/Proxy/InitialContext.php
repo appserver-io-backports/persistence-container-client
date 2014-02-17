@@ -38,16 +38,6 @@ class InitialContext extends Proxy
 {
 
     /**
-     * Initialize the proxy instance.
-     * 
-     * @return void
-     */
-    public function __construct()
-    {
-        parent::__construct('TechDivision\ApplicationServer\InitialContext');
-    }
-
-    /**
      * Runs a lookup on the container for the class with the
      * passed name.
      * 
