@@ -97,8 +97,8 @@ class RemoteMethodCall implements RemoteMethod
     /**
      * Adds passed parameter to the array with the parameters.
      * 
-     * @param string $key   The parameter name
-     * @param mixed  $value The parameter value
+     * @param integer $key   The parameter name
+     * @param mixed   $value The parameter value
      * 
      * @return void
      */
@@ -167,7 +167,7 @@ class RemoteMethodCall implements RemoteMethod
     /**
      * Sets the client's socket server IP address.
      * 
-     * @param integer $address The client's socket server IP address
+     * @param string $address The client's socket server IP address
      * 
      * @return void
      */

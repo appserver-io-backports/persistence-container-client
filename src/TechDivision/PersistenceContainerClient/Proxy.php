@@ -66,11 +66,11 @@ class Proxy implements RemoteObject
     /**
      * Initializes the proxy with the class name to proxy.
      * 
-     * @param string $className The name of the class to create the proxy for 
+     * @param mixed $className The name of the class to create the proxy for 
      * 
      * @return void
      */
-    public function __construct($className)
+    public function __construct($className = 'TechDivision\ApplicationServer\InitialContext')
     {
         $this->className = $className;
     }
@@ -133,7 +133,7 @@ class Proxy implements RemoteObject
      * @param \TechDivision\PersistenceContainerClient\Interfaces\RemoteMethod $methodCall The remote method call instance
      * @param \TechDivision\PersistenceContainerClient\Interfaces\Session      $session    The session with the connection instance to use
      * 
-     * @return void
+     * @return mixed The result of the remote method call
      */
     public function __invoke(RemoteMethod $methodCall, Session $session)
     {
