@@ -25,7 +25,7 @@ use TechDivision\PersistenceContainerClient\Context\ContextConnection;
 
 /**
  * Connection factory to create a new context connection.
- * 
+ *
  * @category   Appserver
  * @package    TechDivision_PersistenceContainerClient
  * @subpackage Context
@@ -38,23 +38,25 @@ class Factory
 {
 
     /**
-     * The instance as singleton.
-     * 
-     * @var \TechDivision\PersistenceContainerClient\Interfaces\Connection 
+     * The instances as singletons.
+     *
+     * @var array<\TechDivision\PersistenceContainerClient\Interfaces\Connection>
      */
-    protected static $instance = null;
+    protected static $instance = array();
 
     /**
-     * Simple factory to create a new context connection 
+     * Simple factory to create a new context connection
      * of the requested type.
-     * 
+     *
+     * @param string $appName Name of the webapp using this client connection
+     *
      * @return \TechDivision\PersistenceContainerClient\Interfaces\Connection The requested context connection
      */
-    public static function createContextConnection()
+    public static function createContextConnection($appName)
     {
-        if (self::$instance == null) {
-            self::$instance = new ContextConnection();
+        if (self::$instance[$appName] == null) {
+            self::$instance[$appName] = new ContextConnection($appName);
         }
-        return self::$instance;
+        return self::$instance[$appName];
     }
 }

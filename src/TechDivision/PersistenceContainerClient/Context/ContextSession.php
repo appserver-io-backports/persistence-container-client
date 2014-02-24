@@ -28,7 +28,7 @@ use TechDivision\PersistenceContainerClient\Proxy\InitialContext;
 
 /**
  * The interface for the remote connection.
- * 
+ *
  * @category   Appserver
  * @package    TechDivision_PersistenceContainerClient
  * @subpackage Context
@@ -42,23 +42,23 @@ class ContextSession implements Session
 
     /**
      * The connection instance.
-     * 
-     * @var TechDivision\PersistenceContainerClient\Interfaces\Connection
+     *
+     * @var \TechDivision\PersistenceContainerClient\Interfaces\Connection
      */
     protected $connection = null;
 
     /**
      * The session ID used for the connection.
-     * 
+     *
      * @var string
      */
     protected $sessionId = null;
 
     /**
      * Initializes the session with the connection.
-     * 
-     * @param TechDivision\PersistenceContainerClient\Interfaces\Connection $connection The connection for the session
-     * 
+     *
+     * @param \TechDivision\PersistenceContainerClient\Interfaces\Connection $connection The connection for the session
+     *
      * @return void
      */
     public function __construct(Connection $connection)
@@ -74,9 +74,9 @@ class ContextSession implements Session
 
     /**
      * Returns the ID of the session to use.
-     * 
+     *
      * @return string The session ID
-     * @see TechDivision\PersistenceContainerClient\Interfaces\Session::getSessionId()
+     * @see \TechDivision\PersistenceContainerClient\Interfaces\Session::getSessionId()
      */
     public function getSessionId()
     {
@@ -85,9 +85,9 @@ class ContextSession implements Session
 
     /**
      * Invokes the remote method over the connection.
-     *  
+     *
      * @param \TechDivision\PersistenceContainerClient\Interfaces\RemoteMethod $remoteMethod The remote method call to invoke
-     * 
+     *
      * @return mixed the method return value
      * @see TechDivision\PersistenceContainerClient\Interfaces\Session::send()
      * @todo Refactor to replace check for 'setSession' method, e. g. check for an interface
@@ -108,9 +108,9 @@ class ContextSession implements Session
 
     /**
      * Creates a remote inital context instance.
-     * 
+     *
      * @return \TechDivision\PersistenceContainerClient\Interfaces\RemoteObject The proxy for the inital context
-     * @see TechDivision\PersistenceContainerClient\Interfaces\Session::createInitialContext()
+     * @see \TechDivision\PersistenceContainerClient\Interfaces\Session::createInitialContext()
      */
     public function createInitialContext()
     {

@@ -23,7 +23,7 @@ namespace TechDivision\PersistenceContainerClient\Interfaces;
 
 /**
  * Interface for all remote objects.
- * 
+ *
  * @category   Appserver
  * @package    TechDivision_PersistenceContainerClient
  * @subpackage Interfaces
@@ -37,14 +37,14 @@ interface RemoteObject
 
     /**
      * Returns the session instance.
-     * 
-     * @return TechDivision\PersistenceContainerClient\Interfaces\Session The session instance
+     *
+     * @return \TechDivision\PersistenceContainerClient\Interfaces\Session The session instance
      */
     public function getSession();
 
     /**
      * The name of the original object.
-     * 
+     *
      * @return string The name of the original object
      */
     public function getClassName();

@@ -23,7 +23,7 @@ namespace TechDivision\PersistenceContainerClient\Interfaces;
 
 /**
  * The interface for the remote connection.
- * 
+ *
  * @category   Appserver
  * @package    TechDivision_PersistenceContainerClient
  * @subpackage Interfaces
@@ -37,37 +37,37 @@ interface Connection
 
     /**
      * Creates the connection to the container.
-     * 
+     *
      * @return void
      */
     public function connect();
 
     /**
      * Shutdown the connection to the container.
-     * 
+     *
      * @return void
      */
     public function disconnect();
 
     /**
      * Sends the remote method call to the container instance.
-     * 
-     * @param TechDivision\PersistenceContainerClient\Interfaces\RemoteMethod $remoteMethod The remote method to invoke
-     * 
+     *
+     * @param \TechDivision\PersistenceContainerClient\Interfaces\RemoteMethod $remoteMethod The remote method to invoke
+     *
      * @return mixed The response from the container
      */
     public function send(RemoteMethod $remoteMethod);
 
     /**
      * Initializes a new session instance.
-     * 
-     * @return TechDivision\PersistenceContainerClient\Interfaces\Session The session instance
+     *
+     * @return \TechDivision\PersistenceContainerClient\Interfaces\Session The session instance
      */
     public function createContextSession();
 
     /**
      * Returns the socket the connection is based on.
-     * 
+     *
      * @return \TechDivision\Socket\Client The socket instance
      */
     public function getSocket();

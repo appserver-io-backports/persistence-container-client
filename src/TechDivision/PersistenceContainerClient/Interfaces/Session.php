@@ -23,7 +23,7 @@ namespace TechDivision\PersistenceContainerClient\Interfaces;
 
 /**
  * The interface for the session.
- * 
+ *
  * @category   Appserver
  * @package    TechDivision_PersistenceContainerClient
  * @subpackage Interfaces
@@ -37,23 +37,24 @@ interface Session
 
     /**
      * Returns the ID of the session to use.
-     * 
+     *
      * @return string The session ID
      */
     public function getSessionId();
 
     /**
      * Invokes the remote method over the connection.
-     *  
-     * @param \TechDivision\PersistenceContainerClient\Interfaces\RemoteMethod $remoteMethod The remote method call to invoke
-     * 
+     *
+     * @param \TechDivision\PersistenceContainerClient\Interfaces\RemoteMethod $remoteMethod The remote method call to
+     *                                                                                       invoke
+     *
      * @return mixed the method return value
      */
     public function send(RemoteMethod $remoteMethod);
 
     /**
      * Creates a remote inital context instance.
-     * 
+     *
      * @return \TechDivision\PersistenceContainerClient\Interfaces\RemoteObject The proxy for the inital context
      */
     public function createInitialContext();
