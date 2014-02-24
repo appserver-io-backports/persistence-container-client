@@ -25,7 +25,7 @@ use TechDivision\PersistenceContainerClient\Proxy;
 
 /**
  * Proxy for the container instance itself.
- * 
+ *
  * @category   Appserver
  * @package    TechDivision_PersistenceContainerClient
  * @subpackage Proxy
@@ -40,10 +40,10 @@ class InitialContext extends Proxy
     /**
      * Runs a lookup on the container for the class with the
      * passed name.
-     * 
+     *
      * @param string $className The class name to run the lookup for
-     * 
-     * @return TechDivision\PersistenceContainerClient\Interfaces\RemoteObject The instance
+     *
+     * @return \TechDivision\PersistenceContainerClient\Interfaces\RemoteObject The instance
      */
     public function lookup($className)
     {

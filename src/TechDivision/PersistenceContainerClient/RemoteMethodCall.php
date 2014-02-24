@@ -25,7 +25,7 @@ use TechDivision\PersistenceContainerClient\Interfaces\RemoteMethod;
 
 /**
  * Abstract base class of the Maps.
- * 
+ *
  * @category  Appserver
  * @package   TechDivision_PersistenceContainerClient
  * @author    Tim Wagner <tw@techdivision.com>
@@ -38,53 +38,60 @@ class RemoteMethodCall implements RemoteMethod
 
     /**
      * The class name to invoke the method on.
-     * 
+     *
      * @var string
      */
     protected $className = null;
 
     /**
      * The method name to invoke on the class.
-     * 
+     *
      * @var string
      */
     protected $methodName = null;
 
     /**
      * Parameters for the method.
-     * 
+     *
      * @var array
      */
     protected $parameters = array();
 
     /**
      * The session ID to use for the method call.
-     * 
+     *
      * @var string
      */
     protected $sessionId = null;
 
     /**
      * The client's socket server IP address to send the response to.
-     * 
-     * @var string 
+     *
+     * @var string
      */
     protected $address = '127.0.0.1';
 
     /**
+     * The name of the webapp this call originates from
+     *
+     * @var string
+     */
+    protected $appName;
+
+    /**
      * The client's socket server port to send the response to.
-     * 
-     * @var integer 
+     *
+     * @var integer
      */
     protected $port = 0;
 
     /**
      * Initialize the instance with the necessary params.
-     * 
+     *
      * @param string $className  The class name to invoke the method on
      * @param string $methodName The method name to invoke
      * @param string $sessionId  The session ID to use for the method call
-     * 
+     *
      * @return void
      */
     public function __construct($className, $methodName, $sessionId = null)
@@ -96,10 +103,10 @@ class RemoteMethodCall implements RemoteMethod
 
     /**
      * Adds passed parameter to the array with the parameters.
-     * 
+     *
      * @param integer $key   The parameter name
      * @param mixed   $value The parameter value
-     * 
+     *
      * @return void
      */
     public function addParameter($key, $value)
@@ -109,11 +116,11 @@ class RemoteMethodCall implements RemoteMethod
 
     /**
      * Returns the parameter with the passed key.
-     * 
+     *
      * @param string $key The name of the parameter to return
-     * 
+     *
      * @return mixed The parameter's value
-     * @see TechDivision\PersistenceContainerClient\Interfaces\RemoteMethod::getParameter()
+     * @see \TechDivision\PersistenceContainerClient\Interfaces\RemoteMethod::getParameter()
      */
     public function getParameter($key)
     {
@@ -122,9 +129,9 @@ class RemoteMethodCall implements RemoteMethod
 
     /**
      * Returns the parameters for the method.
-     * 
+     *
      * @return array The method's parameters
-     * @see TechDivision\PersistenceContainerClient\Interfaces\RemoteMethod::getParameters()
+     * @see \TechDivision\PersistenceContainerClient\Interfaces\RemoteMethod::getParameters()
      */
     public function getParameters()
     {
@@ -133,9 +140,9 @@ class RemoteMethodCall implements RemoteMethod
 
     /**
      * Returns the class name to invoke the method on.
-     * 
+     *
      * @return string The class name
-     * @see TechDivision\PersistenceContainerClient\Interfaces\RemoteMethod::getClassName()
+     * @see \TechDivision\PersistenceContainerClient\Interfaces\RemoteMethod::getClassName()
      */
     public function getClassName()
     {
@@ -144,9 +151,9 @@ class RemoteMethodCall implements RemoteMethod
 
     /**
      * Returns the method name to invoke on the class.
-     * 
+     *
      * @return string The method name
-     * @see TechDivision\PersistenceContainerClient\Interfaces\RemoteMethod::getMethodName()
+     * @see \TechDivision\PersistenceContainerClient\Interfaces\RemoteMethod::getMethodName()
      */
     public function getMethodName()
     {
@@ -155,9 +162,9 @@ class RemoteMethodCall implements RemoteMethod
 
     /**
      * Returns the session ID to use for the method call.
-     * 
+     *
      * @return string The session ID
-     * @see TechDivision\PersistenceContainerClient\Interfaces\RemoteMethod::getSessionId()
+     * @see \TechDivision\PersistenceContainerClient\Interfaces\RemoteMethod::getSessionId()
      */
     public function getSessionId()
     {
@@ -166,9 +173,9 @@ class RemoteMethodCall implements RemoteMethod
 
     /**
      * Sets the client's socket server IP address.
-     * 
+     *
      * @param string $address The client's socket server IP address
-     * 
+     *
      * @return void
      */
     public function setAddress($address)
@@ -178,9 +185,9 @@ class RemoteMethodCall implements RemoteMethod
 
     /**
      * Returns the client's server socket IP address.
-     * 
+     *
      * @return string The client's server socket IP address
-     * @see TechDivision\PersistenceContainerClient\Interfaces\RemoteMethod::getAddress()
+     * @see \TechDivision\PersistenceContainerClient\Interfaces\RemoteMethod::getAddress()
      */
     public function getAddress()
     {
@@ -188,10 +195,32 @@ class RemoteMethodCall implements RemoteMethod
     }
 
     /**
+     * Sets the webapp name the call comes from
+     *
+     * @param string $appName Name of the webapp using this client connection
+     *
+     * @return void
+     */
+    public function setAppName($appName)
+    {
+        $this->appName = $appName;
+    }
+
+    /**
+     * Returns the name of the webapp this call comes from
+     *
+     * @return string The webapp name
+     */
+    public function getAppName()
+    {
+        return $this->appName;
+    }
+
+    /**
      * Sets the client's socket server port.
-     * 
+     *
      * @param integer $port The client's socket server port
-     * 
+     *
      * @return void
      */
     public function setPort($port)
@@ -201,9 +230,9 @@ class RemoteMethodCall implements RemoteMethod
 
     /**
      * Returns the client's server socket port.
-     * 
+     *
      * @return string The client's server socket port
-     * @see TechDivision\PersistenceContainerClient\Interfaces\RemoteMethod::getPort()
+     * @see \TechDivision\PersistenceContainerClient\Interfaces\RemoteMethod::getPort()
      */
     public function getPort()
     {
