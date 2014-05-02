@@ -10,32 +10,41 @@
  * http://opensource.org/licenses/osl-3.0.php
  *
  * PHP version 5
- *
- * @category  Appserver
+ * 
+ * @category  Library
  * @package   TechDivision_PersistenceContainerClient
  * @author    Tim Wagner <tw@techdivision.com>
  * @copyright 2014 TechDivision GmbH <info@techdivision.com>
  * @license   http://opensource.org/licenses/osl-3.0.php Open Software License (OSL 3.0)
+ * @link      https://github.com/techdivision/TechDivision_PersistenceContainerClient
  * @link      http://www.appserver.io
  */
 
 namespace TechDivision\PersistenceContainerClient;
 
-use TechDivision\PersistenceContainerClient\Interfaces\RemoteMethod;
+use TechDivision\PersistenceContainerProtocol\RemoteMethod;
 
 /**
  * Abstract base class of the Maps.
- *
- * @category  Appserver
+ * 
+ * @category  Library
  * @package   TechDivision_PersistenceContainerClient
  * @author    Tim Wagner <tw@techdivision.com>
  * @copyright 2014 TechDivision GmbH <info@techdivision.com>
  * @license   http://opensource.org/licenses/osl-3.0.php Open Software License (OSL 3.0)
+ * @link      https://github.com/techdivision/TechDivision_PersistenceContainerClient
  * @link      http://www.appserver.io
  */
 class RemoteMethodCall implements RemoteMethod
 {
 
+    /**
+     * The name of the webapp this call originates from
+     *
+     * @var string
+     */
+    protected $appName;
+    
     /**
      * The class name to invoke the method on.
      *
@@ -70,13 +79,6 @@ class RemoteMethodCall implements RemoteMethod
      * @var string
      */
     protected $address = '127.0.0.1';
-
-    /**
-     * The name of the webapp this call originates from
-     *
-     * @var string
-     */
-    protected $appName;
 
     /**
      * The client's socket server port to send the response to.
@@ -120,7 +122,7 @@ class RemoteMethodCall implements RemoteMethod
      * @param string $key The name of the parameter to return
      *
      * @return mixed The parameter's value
-     * @see \TechDivision\PersistenceContainerClient\Interfaces\RemoteMethod::getParameter()
+     * @see \TechDivision\PersistenceContainerProtocol\RemoteMethod::getParameter()
      */
     public function getParameter($key)
     {
@@ -131,7 +133,7 @@ class RemoteMethodCall implements RemoteMethod
      * Returns the parameters for the method.
      *
      * @return array The method's parameters
-     * @see \TechDivision\PersistenceContainerClient\Interfaces\RemoteMethod::getParameters()
+     * @see \TechDivision\PersistenceContainerProtocol\RemoteMethod::getParameters()
      */
     public function getParameters()
     {
@@ -142,7 +144,7 @@ class RemoteMethodCall implements RemoteMethod
      * Returns the class name to invoke the method on.
      *
      * @return string The class name
-     * @see \TechDivision\PersistenceContainerClient\Interfaces\RemoteMethod::getClassName()
+     * @see \TechDivision\PersistenceContainerProtocol\RemoteMethod::getClassName()
      */
     public function getClassName()
     {
@@ -153,7 +155,7 @@ class RemoteMethodCall implements RemoteMethod
      * Returns the method name to invoke on the class.
      *
      * @return string The method name
-     * @see \TechDivision\PersistenceContainerClient\Interfaces\RemoteMethod::getMethodName()
+     * @see \TechDivision\PersistenceContainerProtocol\RemoteMethod::getMethodName()
      */
     public function getMethodName()
     {
@@ -164,7 +166,7 @@ class RemoteMethodCall implements RemoteMethod
      * Returns the session ID to use for the method call.
      *
      * @return string The session ID
-     * @see \TechDivision\PersistenceContainerClient\Interfaces\RemoteMethod::getSessionId()
+     * @see \TechDivision\PersistenceContainerProtocol\RemoteMethod::getSessionId()
      */
     public function getSessionId()
     {
@@ -187,7 +189,7 @@ class RemoteMethodCall implements RemoteMethod
      * Returns the client's server socket IP address.
      *
      * @return string The client's server socket IP address
-     * @see \TechDivision\PersistenceContainerClient\Interfaces\RemoteMethod::getAddress()
+     * @see \TechDivision\PersistenceContainerProtocol\RemoteMethod::getAddress()
      */
     public function getAddress()
     {
@@ -232,7 +234,7 @@ class RemoteMethodCall implements RemoteMethod
      * Returns the client's server socket port.
      *
      * @return string The client's server socket port
-     * @see \TechDivision\PersistenceContainerClient\Interfaces\RemoteMethod::getPort()
+     * @see \TechDivision\PersistenceContainerProtocol\RemoteMethod::getPort()
      */
     public function getPort()
     {

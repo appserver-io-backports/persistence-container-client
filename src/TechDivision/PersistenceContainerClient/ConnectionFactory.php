@@ -1,7 +1,7 @@
 <?php
 
 /**
- * TechDivision\PersistenceContainerClient\Context\Connection\Factory
+ * TechDivision\PersistenceContainerClient\ConnectionFactory
  *
  * NOTICE OF LICENSE
  *
@@ -10,37 +10,36 @@
  * http://opensource.org/licenses/osl-3.0.php
  *
  * PHP version 5
- *
- * @category  Appserver
+ * 
+ * @category  Library
  * @package   TechDivision_PersistenceContainerClient
  * @author    Tim Wagner <tw@techdivision.com>
  * @copyright 2014 TechDivision GmbH <info@techdivision.com>
  * @license   http://opensource.org/licenses/osl-3.0.php Open Software License (OSL 3.0)
+ * @link      https://github.com/techdivision/TechDivision_PersistenceContainerClient
  * @link      http://www.appserver.io
  */
 
-namespace TechDivision\PersistenceContainerClient\Context\Connection;
-
-use TechDivision\PersistenceContainerClient\Context\ContextConnection;
+namespace TechDivision\PersistenceContainerClient;
 
 /**
  * Connection factory to create a new context connection.
- *
- * @category   Appserver
- * @package    TechDivision_PersistenceContainerClient
- * @subpackage Context
- * @author     Tim Wagner <tw@techdivision.com>
- * @copyright  2014 TechDivision GmbH <info@techdivision.com>
- * @license    http://opensource.org/licenses/osl-3.0.php Open Software License (OSL 3.0)
- * @link       http://www.appserver.io
+ * 
+ * @category  Library
+ * @package   TechDivision_PersistenceContainerClient
+ * @author    Tim Wagner <tw@techdivision.com>
+ * @copyright 2014 TechDivision GmbH <info@techdivision.com>
+ * @license   http://opensource.org/licenses/osl-3.0.php Open Software License (OSL 3.0)
+ * @link      https://github.com/techdivision/TechDivision_PersistenceContainerClient
+ * @link      http://www.appserver.io
  */
-class Factory
+class ConnectionFactory
 {
 
     /**
      * The instances as singletons.
      *
-     * @var array<\TechDivision\PersistenceContainerClient\Interfaces\Connection>
+     * @var array
      */
     protected static $instance = array();
 
@@ -50,7 +49,7 @@ class Factory
      *
      * @param string $appName Name of the webapp using this client connection
      *
-     * @return \TechDivision\PersistenceContainerClient\Interfaces\Connection The requested context connection
+     * @return \TechDivision\PersistenceContainerClient\Connection The requested context connection
      */
     public static function createContextConnection($appName)
     {

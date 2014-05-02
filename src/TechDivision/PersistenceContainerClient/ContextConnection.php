@@ -10,32 +10,33 @@
  * http://opensource.org/licenses/osl-3.0.php
  *
  * PHP version 5
- *
- * @category  Appserver
+ * 
+ * @category  Library
  * @package   TechDivision_PersistenceContainerClient
  * @author    Tim Wagner <tw@techdivision.com>
  * @copyright 2014 TechDivision GmbH <info@techdivision.com>
  * @license   http://opensource.org/licenses/osl-3.0.php Open Software License (OSL 3.0)
+ * @link      https://github.com/techdivision/TechDivision_PersistenceContainerClient
  * @link      http://www.appserver.io
  */
 
-namespace TechDivision\PersistenceContainerClient\Context;
+namespace TechDivision\PersistenceContainerClient;
 
 use TechDivision\Socket\Client;
-use TechDivision\PersistenceContainerClient\Context\ContextSession;
-use TechDivision\PersistenceContainerClient\Interfaces\Connection;
-use TechDivision\PersistenceContainerClient\Interfaces\RemoteMethod;
+use TechDivision\PersistenceContainerClientContextSession;
+use TechDivision\PersistenceContainerClientConnection;
+use TechDivision\PersistenceContainerProtocol\RemoteMethod;
 
 /**
  * Connection implementation to invoke a remote method call over a socket.
- *
- * @category   Appserver
- * @package    TechDivision_PersistenceContainerClient
- * @subpackage Context
- * @author     Tim Wagner <tw@techdivision.com>
- * @copyright  2014 TechDivision GmbH <info@techdivision.com>
- * @license    http://opensource.org/licenses/osl-3.0.php Open Software License (OSL 3.0)
- * @link       http://www.appserver.io
+ * 
+ * @category  Library
+ * @package   TechDivision_PersistenceContainerClient
+ * @author    Tim Wagner <tw@techdivision.com>
+ * @copyright 2014 TechDivision GmbH <info@techdivision.com>
+ * @license   http://opensource.org/licenses/osl-3.0.php Open Software License (OSL 3.0)
+ * @link      https://github.com/techdivision/TechDivision_PersistenceContainerClient
+ * @link      http://www.appserver.io
  */
 class ContextConnection implements Connection
 {
@@ -211,14 +212,14 @@ class ContextConnection implements Connection
     /**
      * Sends the remote method call to the container instance.
      *
-     * @param \TechDivision\PersistenceContainerClient\Interfaces\RemoteMethod $remoteMethod The remote method instance
+     * @param \TechDivision\PersistenceContainerProtocol\RemoteMethod $remoteMethod The remote method instance
      *
      * @return mixed The response from the container
-     * @see TechDivision\PersistenceContainerClient\Interfaces\Connection::send()
+     * @see TechDivision\PersistenceContainerClient\Connection::send()
      */
     public function send(RemoteMethod $remoteMethod)
     {
-
+        
         // load the socket instance
         $socket = $this->getSocket();
 
@@ -228,13 +229,13 @@ class ContextConnection implements Connection
         $remoteMethod->setAppName($this->getAppName());
 
         // serialize the remote method and write it to the socket
-        $socket->sendLine(serialize($remoteMethod));
-
+        $socket->sendLine(base64_encode(serialize($remoteMethod)));
+        
         // read the response
         $serialized = $socket->readLine();
-
+        
         // unserialize the response
-        $response = unserialize($serialized);
+        $response = unserialize(base64_decode($serialized));
 
         // if an exception returns, throw it again
         if ($response instanceof \Exception) {
@@ -248,7 +249,7 @@ class ContextConnection implements Connection
     /**
      * Initializes a new session instance.
      *
-     * @return \TechDivision\PersistenceContainerClient\Interfaces\Session The session instance
+     * @return \TechDivision\PersistenceContainerProtocol\Session The session instance
      * @see \TechDivision\PersistenceContainerClient\Interfaces\Connection::createContextSession()
      */
     public function createContextSession()

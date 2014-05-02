@@ -1,7 +1,7 @@
 <?php
 
 /**
- * TechDivision\PersistenceContainerClient\Context\ContextSession
+ * TechDivision\PersistenceContainerClient\ContextSession
  *
  * NOTICE OF LICENSE
  *
@@ -10,32 +10,31 @@
  * http://opensource.org/licenses/osl-3.0.php
  *
  * PHP version 5
- *
- * @category  Appserver
+ * 
+ * @category  Library
  * @package   TechDivision_PersistenceContainerClient
  * @author    Tim Wagner <tw@techdivision.com>
  * @copyright 2014 TechDivision GmbH <info@techdivision.com>
  * @license   http://opensource.org/licenses/osl-3.0.php Open Software License (OSL 3.0)
+ * @link      https://github.com/techdivision/TechDivision_PersistenceContainerClient
  * @link      http://www.appserver.io
  */
 
-namespace TechDivision\PersistenceContainerClient\Context;
+namespace TechDivision\PersistenceContainerClient;
 
-use TechDivision\PersistenceContainerClient\Interfaces\Session;
-use TechDivision\PersistenceContainerClient\Interfaces\Connection;
-use TechDivision\PersistenceContainerClient\Interfaces\RemoteMethod;
-use TechDivision\PersistenceContainerClient\Proxy\InitialContext;
+use TechDivision\PersistenceContainerProtocol\Session;
+use TechDivision\PersistenceContainerProtocol\RemoteMethod;
 
 /**
  * The interface for the remote connection.
- *
- * @category   Appserver
- * @package    TechDivision_PersistenceContainerClient
- * @subpackage Context
- * @author     Tim Wagner <tw@techdivision.com>
- * @copyright  2014 TechDivision GmbH <info@techdivision.com>
- * @license    http://opensource.org/licenses/osl-3.0.php Open Software License (OSL 3.0)
- * @link       http://www.appserver.io
+ * 
+ * @category  Library
+ * @package   TechDivision_PersistenceContainerClient
+ * @author    Tim Wagner <tw@techdivision.com>
+ * @copyright 2014 TechDivision GmbH <info@techdivision.com>
+ * @license   http://opensource.org/licenses/osl-3.0.php Open Software License (OSL 3.0)
+ * @link      https://github.com/techdivision/TechDivision_PersistenceContainerClient
+ * @link      http://www.appserver.io
  */
 class ContextSession implements Session
 {
@@ -43,7 +42,7 @@ class ContextSession implements Session
     /**
      * The connection instance.
      *
-     * @var \TechDivision\PersistenceContainerClient\Interfaces\Connection
+     * @var \TechDivision\PersistenceContainerClient\Connection
      */
     protected $connection = null;
 
@@ -57,7 +56,7 @@ class ContextSession implements Session
     /**
      * Initializes the session with the connection.
      *
-     * @param \TechDivision\PersistenceContainerClient\Interfaces\Connection $connection The connection for the session
+     * @param \TechDivision\PersistenceContainerClient\Connection $connection The connection for the session
      *
      * @return void
      */
@@ -76,7 +75,7 @@ class ContextSession implements Session
      * Returns the ID of the session to use.
      *
      * @return string The session ID
-     * @see \TechDivision\PersistenceContainerClient\Interfaces\Session::getSessionId()
+     * @see \TechDivision\PersistenceContainerProtocol\Session::getSessionId()
      */
     public function getSessionId()
     {
@@ -86,10 +85,10 @@ class ContextSession implements Session
     /**
      * Invokes the remote method over the connection.
      *
-     * @param \TechDivision\PersistenceContainerClient\Interfaces\RemoteMethod $remoteMethod The remote method call to invoke
+     * @param \TechDivision\PersistenceContainerProtocol\RemoteMethod $remoteMethod The remote method call to invoke
      *
      * @return mixed the method return value
-     * @see TechDivision\PersistenceContainerClient\Interfaces\Session::send()
+     * @see TechDivision\PersistenceContainerProtocol\Session::send()
      * @todo Refactor to replace check for 'setSession' method, e. g. check for an interface
      */
     public function send(RemoteMethod $remoteMethod)
@@ -109,8 +108,8 @@ class ContextSession implements Session
     /**
      * Creates a remote inital context instance.
      *
-     * @return \TechDivision\PersistenceContainerClient\Interfaces\RemoteObject The proxy for the inital context
-     * @see \TechDivision\PersistenceContainerClient\Interfaces\Session::createInitialContext()
+     * @return \TechDivision\PersistenceContainerProtocol\RemoteObject The proxy for the inital context
+     * @see \TechDivision\PersistenceContainerProtocol\Session::createInitialContext()
      */
     public function createInitialContext()
     {

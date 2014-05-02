@@ -1,7 +1,7 @@
 <?php
 
 /**
- * TechDivision\PersistenceContainerClient\Interfaces\Connection
+ * TechDivision\PersistenceContainerClient\Connection
  *
  * NOTICE OF LICENSE
  *
@@ -10,27 +10,30 @@
  * http://opensource.org/licenses/osl-3.0.php
  *
  * PHP version 5
- *
- * @category  Appserver
+ * 
+ * @category  Library
  * @package   TechDivision_PersistenceContainerClient
  * @author    Tim Wagner <tw@techdivision.com>
  * @copyright 2014 TechDivision GmbH <info@techdivision.com>
  * @license   http://opensource.org/licenses/osl-3.0.php Open Software License (OSL 3.0)
+ * @link      https://github.com/techdivision/TechDivision_PersistenceContainerClient
  * @link      http://www.appserver.io
  */
 
-namespace TechDivision\PersistenceContainerClient\Interfaces;
+namespace TechDivision\PersistenceContainerClient;
+
+use TechDivision\PersistenceContainerProtocol\RemoteMethod;
 
 /**
  * The interface for the remote connection.
- *
- * @category   Appserver
- * @package    TechDivision_PersistenceContainerClient
- * @subpackage Interfaces
- * @author     Tim Wagner <tw@techdivision.com>
- * @copyright  2014 TechDivision GmbH <info@techdivision.com>
- * @license    http://opensource.org/licenses/osl-3.0.php Open Software License (OSL 3.0)
- * @link       http://www.appserver.io
+ * 
+ * @category  Library
+ * @package   TechDivision_PersistenceContainerClient
+ * @author    Tim Wagner <tw@techdivision.com>
+ * @copyright 2014 TechDivision GmbH <info@techdivision.com>
+ * @license   http://opensource.org/licenses/osl-3.0.php Open Software License (OSL 3.0)
+ * @link      https://github.com/techdivision/TechDivision_PersistenceContainerClient
+ * @link      http://www.appserver.io
  */
 interface Connection
 {
@@ -52,7 +55,7 @@ interface Connection
     /**
      * Sends the remote method call to the container instance.
      *
-     * @param \TechDivision\PersistenceContainerClient\Interfaces\RemoteMethod $remoteMethod The remote method to invoke
+     * @param \TechDivision\PersistenceContainerProtocol\RemoteMethod $remoteMethod The remote method to invoke
      *
      * @return mixed The response from the container
      */
@@ -61,7 +64,7 @@ interface Connection
     /**
      * Initializes a new session instance.
      *
-     * @return \TechDivision\PersistenceContainerClient\Interfaces\Session The session instance
+     * @return \TechDivision\PersistenceContainerProtocol\Session The session instance
      */
     public function createContextSession();
 
