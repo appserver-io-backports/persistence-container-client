@@ -81,6 +81,16 @@ class ContextSession implements Session
     {
         return $this->sessionId;
     }
+    
+    /**
+     * The session ID to use.
+     * 
+     * @param string $sessionId The session ID to use
+     */
+    public function setSessionId($sessionId)
+    {
+        $this->sessionId = $sessionId;
+    }
 
     /**
      * Invokes the remote method over the connection.
