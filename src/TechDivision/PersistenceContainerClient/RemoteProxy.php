@@ -1,7 +1,7 @@
 <?php
 
 /**
- * TechDivision\PersistenceContainerClient\Proxy
+ * TechDivision\PersistenceContainerClient\RemoteProxy
  *
  * NOTICE OF LICENSE
  *
@@ -11,19 +11,21 @@
  *
  * PHP version 5
  *
- * @category  Appserver
+ * @category  Library
  * @package   TechDivision_PersistenceContainerClient
  * @author    Tim Wagner <tw@techdivision.com>
  * @copyright 2014 TechDivision GmbH <info@techdivision.com>
  * @license   http://opensource.org/licenses/osl-3.0.php Open Software License (OSL 3.0)
+ * @link      https://github.com/techdivision/TechDivision_PersistenceContainerClient
  * @link      http://www.appserver.io
  */
 
 namespace TechDivision\PersistenceContainerClient;
 
-use TechDivision\PersistenceContainerClient\Interfaces\Session;
-use TechDivision\PersistenceContainerClient\Interfaces\RemoteObject;
-use TechDivision\PersistenceContainerClient\Interfaces\RemoteMethod;
+use TechDivision\PersistenceContainerProtocol\Session;
+use TechDivision\PersistenceContainerProtocol\RemoteObject;
+use TechDivision\PersistenceContainerProtocol\RemoteMethod;
+use TechDivision\PersistenceContainerProtocol\RemoteMethodCall;
 
 /**
  * The proxy is used to create a new remote object of the
@@ -31,28 +33,29 @@ use TechDivision\PersistenceContainerClient\Interfaces\RemoteMethod;
  *
  * namespace TechDivision\PersistenceContainerClient;
  *
- * use TechDivision\PersistenceContainerClient\Context\Connection\Factory;
+ * use TechDivision\PersistenceContainerClient\ConnectionFactory;
  *
- * $connection = Factory::createContextConnection();
+ * $connection = ConnectionFactory::createContextConnection();
  * $session = $connection->createContextSession();
  * $initialContext = $session->createInitialContext();
  *
  * $processor = $initialContext->lookup('Some\ProxyClass');
  *
- * @category  Appserver
+ * @category  Library
  * @package   TechDivision_PersistenceContainerClient
  * @author    Tim Wagner <tw@techdivision.com>
  * @copyright 2014 TechDivision GmbH <info@techdivision.com>
  * @license   http://opensource.org/licenses/osl-3.0.php Open Software License (OSL 3.0)
+ * @link      https://github.com/techdivision/TechDivision_PersistenceContainerClient
  * @link      http://www.appserver.io
  */
-class Proxy implements RemoteObject
+class RemoteProxy implements RemoteObject
 {
 
     /**
      * Holds the ContextSession for this proxy.
      *
-     * @var \TechDivision\PersistenceContainerClient\Interfaces\Session
+     * @var \TechDivision\PersistenceContainerProtocol\Session
      */
     protected $session = null;
 
@@ -79,7 +82,7 @@ class Proxy implements RemoteObject
      * The name of the original object.
      *
      * @return string The name of the original object
-     * @see \TechDivision\PersistenceContainerClient\Interfaces\RemoteObject::getClassName()
+     * @see \TechDivision\PersistenceContainerProtocol\RemoteObject::getClassName()
      */
     public function getClassName()
     {
@@ -89,9 +92,9 @@ class Proxy implements RemoteObject
     /**
      * Sets the session with the connection instance.
      *
-     * @param \TechDivision\PersistenceContainerClient\Interfaces\Session $session The session instance to use
+     * @param \TechDivision\PersistenceContainerProtocol\Session $session The session instance to use
      *
-     * @return \TechDivision\PersistenceContainerClient\Interfaces\RemoteObject The instance itself
+     * @return \TechDivision\PersistenceContainerProtocol\RemoteObject The instance itself
      */
     public function setSession(Session $session)
     {
@@ -102,8 +105,8 @@ class Proxy implements RemoteObject
     /**
      * Returns the session instance.
      *
-     * @return \TechDivision\PersistenceContainerClient\Interfaces\Session The session instance
-     * @see \TechDivision\PersistenceContainerClient\Interfaces\RemoteObject::getSession()
+     * @return \TechDivision\PersistenceContainerProtocol\Session The session instance
+     * @see \TechDivision\PersistenceContainerProtocol\RemoteObject::getSession()
      */
     public function getSession()
     {
@@ -130,10 +133,8 @@ class Proxy implements RemoteObject
     /**
      * Invokes the remote execution of the passed remote method.
      *
-     * @param \TechDivision\PersistenceContainerClient\Interfaces\RemoteMethod $methodCall The remote method call
-     *                                                                                     instance
-     * @param \TechDivision\PersistenceContainerClient\Interfaces\Session      $session    The session with the
-     *                                                                                     connection instance to use
+     * @param \TechDivision\PersistenceContainerProtocols\RemoteMethod $methodCall The remote method call instance
+     * @param \TechDivision\PersistenceContainerProtocol\Session       $session    The session with the connection instance to use
      *
      * @return mixed The result of the remote method call
      */
@@ -147,10 +148,10 @@ class Proxy implements RemoteObject
      *
      * @param string $className The name of the class to create the proxy for
      *
-     * @return \TechDivision\PersistenceContainerClient\Interfaces\RemoteObject The proxy instance
+     * @return \TechDivision\PersistenceContainerProtocol\RemoteObject The proxy instance
      */
     public static function create($className)
     {
-        return new Proxy($className);
+        return new RemoteProxy($className);
     }
 }
