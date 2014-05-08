@@ -10,7 +10,7 @@
  * http://opensource.org/licenses/osl-3.0.php
  *
  * PHP version 5
- * 
+ *
  * @category  Library
  * @package   TechDivision_PersistenceContainerClient
  * @author    Tim Wagner <tw@techdivision.com>
@@ -22,14 +22,16 @@
 
 namespace TechDivision\PersistenceContainerClient;
 
-use TechDivision\Socket\Client;
+use TechDivision\WebServer\Sockets\StreamSocket;
 use TechDivision\PersistenceContainerClientContextSession;
 use TechDivision\PersistenceContainerClientConnection;
 use TechDivision\PersistenceContainerProtocol\RemoteMethod;
+use TechDivision\PersistenceContainerProtocol\RemoteMethodProtocol;
+use TechDivision\PersistenceContainerProtocol\RemoteMethodCallParser;
 
 /**
  * Connection implementation to invoke a remote method call over a socket.
- * 
+ *
  * @category  Library
  * @package   TechDivision_PersistenceContainerClient
  * @author    Tim Wagner <tw@techdivision.com>
@@ -40,6 +42,13 @@ use TechDivision\PersistenceContainerProtocol\RemoteMethod;
  */
 class ContextConnection implements Connection
 {
+
+	/**
+	 * The default transport to use.
+	 *
+	 * @var string
+	 */
+	protected $transport = 'tcp';
 
     /**
      * The client socket's IP address.
@@ -77,82 +86,48 @@ class ContextConnection implements Connection
     protected $client = null;
 
     /**
+     * Parser to process the remote method call.
+     *
+     * @var \TechDivision\PersistenceContainerProtocol\RemoteMethodCallParser
+     */
+    protected $parser;
+
+    /**
      * Initializes the connection.
      *
      * @param string $appName Name of the webapp using this client connection
      */
     public function __construct($appName = '')
     {
-        $this->appName = $appName;
+
+		// set the application name
+    	$this->appName = $appName;
+
+    	// initialize the remote method call parser and the session
+    	$this->parser = new RemoteMethodCallParser();
         $this->sessions = new \ArrayObject();
     }
 
     /**
-     * Close the sockets that will not be needed anymore.
+     * Returns the parser to process the remote method call.
      *
-     * @return void
+     * @return \TechDivision\PersistenceContainerProtocol\RemoteMethodCallParser The parser instance
      */
-    public function __destruct()
-    {
-    }
+	public function getParser()
+	{
+		return $this->parser;
+	}
 
     /**
-     * Creates the connection to the container.
-     *
-     * @return void
-     * @see \TechDivision\PersistenceContainerClient\Interfaces\Connection::connect()
-     */
-    public function connect()
-    {
-        $client = new Client($this->getAddress(), $this->getPort());
-        $this->setSocket($client->start()->setBlock());
-    }
-
-    /**
-     * Shutdown the connection to the container.
-     *
-     * @return void
-     * @see \TechDivision\PersistenceContainerClient\Interfaces\Connection::disconnect()
-     */
-    public function disconnect()
-    {
-    }
-
-    /**
-     * Sets the socket to use for the client connection, a Socket instance by default.
-     *
-     * @param \TechDivision\Socket\Client $socket The client socket
-     *
-     * @return \TechDivision\PersistenceContainerClient\Context\ContextConnection The instance itself
-     */
-    public function setSocket(Client $socket)
-    {
-        $this->socket = $socket;
-        return $this;
-    }
-
-    /**
-     * Returns the socket the connection is based on.
-     *
-     * @return \TechDivision\Socket\Client The socket instance
-     * @see \TechDivision\PersistenceContainerClient\Interfaces\Connection::getSocket()
-     */
-    public function getSocket()
-    {
-        return $this->socket;
-    }
-
-    /**
-     * Set's the servers IP address for the client to connect to.
+     * Sets the servers IP address for the client to connect to.
      *
      * @param string $address The servers IP address to connect to
      *
-     * @return \TechDivision\PersistenceContainerClient\Context\ContextConnection The instance itself
+     * @return void
      */
     public function setAddress($address)
     {
         $this->address = $address;
-        return $this;
     }
 
     /**
@@ -166,7 +141,7 @@ class ContextConnection implements Connection
     }
 
     /**
-     *  Set's  the servers port for the client to connect to.
+     *  Sets  the servers port for the client to connect to.
      *
      * @param integer $port The servers port to connect to
      *
@@ -188,7 +163,29 @@ class ContextConnection implements Connection
     }
 
     /**
-     * Sets the client's webapp name
+     *  Sets the transport to use.
+     *
+     * @param integer $port The transport to use
+     *
+     * @return void
+     */
+    public function setTransport($transport)
+    {
+        $this->transport = $transport;
+    }
+
+    /**
+     * Returns the transport to use.
+     *
+     * @return integer The transport to use.
+     */
+    public function getTransport()
+    {
+        return $this->transport;
+    }
+
+    /**
+     * Sets the clients webapp name
      *
      * @param string $appName Name of the webapp using this client connection
      *
@@ -210,6 +207,33 @@ class ContextConnection implements Connection
     }
 
     /**
+     * Creates the connection to the container.
+     *
+     * @return void
+     */
+    public function connect()
+    {
+    }
+
+    /**
+     * Shutdown the connection to the container.
+     *
+     * @return void
+     */
+    public function disconnect()
+    {
+    }
+
+    /**
+     * Returns the socket the connection is based on.
+     *
+     * @return \TechDivision\Socket\Client The socket instance
+     */
+    public function getSocket()
+    {
+    }
+
+    /**
      * Sends the remote method call to the container instance.
      *
      * @param \TechDivision\PersistenceContainerProtocol\RemoteMethod $remoteMethod The remote method instance
@@ -219,9 +243,14 @@ class ContextConnection implements Connection
      */
     public function send(RemoteMethod $remoteMethod)
     {
-        
-        // load the socket instance
-        $socket = $this->getSocket();
+
+    	// connect to the persistence container
+    	$clientConnection = StreamSocket::getClientInstance(
+    		$this->getTransport() . '://' . $this->getAddress() . ':' . $this->getPort()
+    	);
+
+        // load the parser instance
+        $parser = $this->getParser();
 
         // set address + port + appName
         $remoteMethod->setAddress($this->getAddress());
@@ -229,20 +258,22 @@ class ContextConnection implements Connection
         $remoteMethod->setAppName($this->getAppName());
 
         // serialize the remote method and write it to the socket
-        $socket->sendLine(base64_encode(serialize($remoteMethod)));
-        
+        $packed = RemoteMethodProtocol::pack($remoteMethod);
+
+        // invoke the remote method call
+        $clientConnection->write(RemoteMethodProtocol::prepareHeaderInvoke($packed));
+        $clientConnection->write($packed);
+
         // read the response
-        $serialized = $socket->readLine();
-        
-        // unserialize the response
-        $response = unserialize(base64_decode($serialized));
+        $contentLength = $parser->parseHeader($clientConnection->readLine());
+        $response = $parser->parseBody($clientConnection, $contentLength);
 
         // if an exception returns, throw it again
         if ($response instanceof \Exception) {
             throw $response;
         }
 
-        // return the data
+        // close the connection and return the data
         return $response;
     }
 
@@ -254,6 +285,6 @@ class ContextConnection implements Connection
      */
     public function createContextSession()
     {
-        return $this->sessions[] = $session = new ContextSession($this);
+        return $this->sessions[] = new ContextSession($this);
     }
 }

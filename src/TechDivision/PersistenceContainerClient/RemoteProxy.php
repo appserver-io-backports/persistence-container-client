@@ -10,7 +10,7 @@
  * http://opensource.org/licenses/osl-3.0.php
  *
  * PHP version 5
- * 
+ *
  * @category  Library
  * @package   TechDivision_PersistenceContainerClient
  * @author    Tim Wagner <tw@techdivision.com>
@@ -25,6 +25,7 @@ namespace TechDivision\PersistenceContainerClient;
 use TechDivision\PersistenceContainerProtocol\Session;
 use TechDivision\PersistenceContainerProtocol\RemoteObject;
 use TechDivision\PersistenceContainerProtocol\RemoteMethod;
+use TechDivision\PersistenceContainerProtocol\RemoteMethodCall;
 
 /**
  * The proxy is used to create a new remote object of the
@@ -39,7 +40,7 @@ use TechDivision\PersistenceContainerProtocol\RemoteMethod;
  * $initialContext = $session->createInitialContext();
  *
  * $processor = $initialContext->lookup('Some\ProxyClass');
- * 
+ *
  * @category  Library
  * @package   TechDivision_PersistenceContainerClient
  * @author    Tim Wagner <tw@techdivision.com>

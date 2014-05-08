@@ -10,7 +10,7 @@
  * http://opensource.org/licenses/osl-3.0.php
  *
  * PHP version 5
- * 
+ *
  * @category  Library
  * @package   TechDivision_PersistenceContainerClient
  * @author    Tim Wagner <tw@techdivision.com>
@@ -27,7 +27,7 @@ use TechDivision\PersistenceContainerProtocol\RemoteMethod;
 
 /**
  * The interface for the remote connection.
- * 
+ *
  * @category  Library
  * @package   TechDivision_PersistenceContainerClient
  * @author    Tim Wagner <tw@techdivision.com>
@@ -81,10 +81,10 @@ class ContextSession implements Session
     {
         return $this->sessionId;
     }
-    
+
     /**
      * The session ID to use.
-     * 
+     *
      * @param string $sessionId The session ID to use
      */
     public function setSessionId($sessionId)
@@ -103,15 +103,16 @@ class ContextSession implements Session
      */
     public function send(RemoteMethod $remoteMethod)
     {
-        // connect to the container
-        $this->connection->connect();
+
+        // invoke the remote method on the connection
         $response = $this->connection->send($remoteMethod);
+
         // check if a proxy has been returned
         if (method_exists($response, 'setSession')) {
             $response->setSession($this);
         }
-        // close the connection
-        $this->connection->disconnect();
+
+        // return the response
         return $response;
     }
 
