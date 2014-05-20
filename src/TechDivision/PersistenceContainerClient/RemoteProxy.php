@@ -70,8 +70,6 @@ class RemoteProxy implements RemoteObject
      * Initializes the proxy with the class name to proxy.
      *
      * @param mixed $className The name of the class to create the proxy for
-     *
-     * @return void
      */
     public function __construct($className = 'TechDivision\ApplicationServer\InitialContext')
     {

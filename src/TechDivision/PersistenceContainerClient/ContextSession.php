@@ -57,8 +57,6 @@ class ContextSession implements Session
      * Initializes the session with the connection.
      *
      * @param \TechDivision\PersistenceContainerClient\Connection $connection The connection for the session
-     *
-     * @return void
      */
     public function __construct(Connection $connection)
     {
@@ -86,6 +84,8 @@ class ContextSession implements Session
      * The session ID to use.
      *
      * @param string $sessionId The session ID to use
+     *
+     * @return void
      */
     public function setSessionId($sessionId)
     {
