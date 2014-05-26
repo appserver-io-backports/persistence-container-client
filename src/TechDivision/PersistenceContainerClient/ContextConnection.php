@@ -43,12 +43,12 @@ use TechDivision\PersistenceContainerProtocol\RemoteMethodCallParser;
 class ContextConnection implements Connection
 {
 
-	/**
-	 * The default transport to use.
-	 *
-	 * @var string
-	 */
-	protected $transport = 'tcp';
+    /**
+     * The default transport to use.
+     *
+     * @var string
+     */
+    protected $transport = 'tcp';
 
     /**
      * The client socket's IP address.
@@ -100,11 +100,11 @@ class ContextConnection implements Connection
     public function __construct($appName = '')
     {
 
-		// set the application name
-    	$this->appName = $appName;
+        // set the application name
+        $this->appName = $appName;
 
-    	// initialize the remote method call parser and the session
-    	$this->parser = new RemoteMethodCallParser();
+        // initialize the remote method call parser and the session
+        $this->parser = new RemoteMethodCallParser();
         $this->sessions = new \ArrayObject();
     }
 
@@ -113,10 +113,10 @@ class ContextConnection implements Connection
      *
      * @return \TechDivision\PersistenceContainerProtocol\RemoteMethodCallParser The parser instance
      */
-	public function getParser()
-	{
-		return $this->parser;
-	}
+    public function getParser()
+    {
+        return $this->parser;
+    }
 
     /**
      * Sets the servers IP address for the client to connect to.
@@ -165,7 +165,7 @@ class ContextConnection implements Connection
     /**
      *  Sets the transport to use.
      *
-     * @param integer $port The transport to use
+     * @param integer $transport The transport to use
      *
      * @return void
      */
@@ -244,10 +244,10 @@ class ContextConnection implements Connection
     public function send(RemoteMethod $remoteMethod)
     {
 
-    	// connect to the persistence container
-    	$clientConnection = StreamSocket::getClientInstance(
-    		$this->getTransport() . '://' . $this->getAddress() . ':' . $this->getPort()
-    	);
+        // connect to the persistence container
+        $clientConnection = StreamSocket::getClientInstance(
+            $this->getTransport() . '://' . $this->getAddress() . ':' . $this->getPort()
+        );
 
         // load the parser instance
         $parser = $this->getParser();
