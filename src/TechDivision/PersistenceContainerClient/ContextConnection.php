@@ -22,7 +22,7 @@
 
 namespace TechDivision\PersistenceContainerClient;
 
-use TechDivision\WebServer\Sockets\StreamSocket;
+use TechDivision\Server\Sockets\StreamSocket;
 use TechDivision\PersistenceContainerClientContextSession;
 use TechDivision\PersistenceContainerClientConnection;
 use TechDivision\PersistenceContainerProtocol\RemoteMethod;
