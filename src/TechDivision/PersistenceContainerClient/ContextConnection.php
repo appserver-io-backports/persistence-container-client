@@ -66,6 +66,27 @@ class ContextConnection implements Connection
     const DEFAULT_PORT = 8585;
 
     /**
+     * The default transport to use.
+     *
+     * @var string
+     */
+    protected $transport = ContextConnection::DEFAULT_SCHEME;
+
+    /**
+     * The client socket's IP address.
+     *
+     * @var string
+     */
+    protected $address = ContextConnection::DEFAULT_HOST;
+
+    /**
+     * The client socket's port.
+     *
+     * @var integer
+     */
+    protected $port = ContextConnection::DEFAULT_PORT;
+
+    /**
      * The name of the webapp using this client connection.
      *
      * @var string
@@ -107,9 +128,6 @@ class ContextConnection implements Connection
         // initialize the remote method call parser and the session
         $this->parser = new RemoteMethodCallParser();
         $this->sessions = new \ArrayObject();
-
-        // initialize the connection base URL
-        $this->client = new Client($this->getDefaultBaseUrl());
     }
 
     /**
@@ -145,12 +163,79 @@ class ContextConnection implements Connection
     }
 
     /**
+     * Sets the servers IP address for the client to connect to.
+     *
+     * @param string $address The servers IP address to connect to
+     *
+     * @return void
+     */
+    public function setAddress($address)
+    {
+        $this->address = $address;
+    }
+
+    /**
+     * Returns the client sockets IP address.
+     *
+     * @return string
+     */
+    public function getAddress()
+    {
+        return $this->address;
+    }
+
+    /**
+     *  Sets  the servers port for the client to connect to.
+     *
+     * @param integer $port The servers port to connect to
+     *
+     * @return void
+     */
+    public function setPort($port)
+    {
+        $this->port = $port;
+    }
+
+    /**
+     * Returns the client port.
+     *
+     * @return integer The client port
+     */
+    public function getPort()
+    {
+        return $this->port;
+    }
+
+    /**
+     *  Sets the transport to use.
+     *
+     * @param integer $transport The transport to use
+     *
+     * @return void
+     */
+    public function setTransport($transport)
+    {
+        $this->transport = $transport;
+    }
+
+    /**
+     * Returns the transport to use.
+     *
+     * @return integer The transport to use.
+     */
+    public function getTransport()
+    {
+        return $this->transport;
+    }
+
+    /**
      * Creates the connection to the container.
      *
      * @return void
      */
     public function connect()
     {
+        $this->client = new Client($this->getBaseUrl());
     }
 
     /**
@@ -160,15 +245,17 @@ class ContextConnection implements Connection
      */
     public function disconnect()
     {
+        $this->client = null;
     }
 
     /**
      * Returns the socket the connection is based on.
      *
-     * @return \TechDivision\Socket\Client The socket instance
+     * @return \Guzzle\Http\Client The socket instance
      */
     public function getSocket()
     {
+        return $this->client;
     }
 
     /**
@@ -182,19 +269,22 @@ class ContextConnection implements Connection
     public function send(RemoteMethod $remoteMethod)
     {
 
+        // connect to the server if necessary
+        $this->connect();
+
         // load the parser instance
         $parser = $this->getParser();
 
         // set address + port + appName
-        $remoteMethod->setAddress(ContextConnection::DEFAULT_HOST);
-        $remoteMethod->setPort(ContextConnection::DEFAULT_PORT);
+        $remoteMethod->setAddress($this->getAddress());
+        $remoteMethod->setPort($this->getPort());
         $remoteMethod->setAppName($this->getAppName());
 
         // serialize the remote method and write it to the socket
         $packed = RemoteMethodProtocol::pack($remoteMethod);
 
         // send a POST request
-        $request = $this->client->post('/' . $this->appName . '/index.pc');
+        $request = $this->getSocket()->post($this->getPath());
         $request->setBody($packed);
         $response = $request->send();
 
@@ -211,17 +301,25 @@ class ContextConnection implements Connection
     }
 
     /**
-     * Prepares the default base URL we used for the connection
+     * Prepares path for the connection to the persistence container.
+     *
+     * @return string The path to define the persistence container module
+     */
+    protected function getPath()
+    {
+        return '/' . $this->getAppName() . '/index.pc';
+    }
+
+    /**
+     * Prepares the base URL we used for the connection
      * to the persistence container.
      *
      * @return string The default base URL
      */
-    protected function getDefaultBaseUrl()
+    protected function getBaseUrl()
     {
         // initialize the requeste URL with the default connection values
-        return ContextConnection::DEFAULT_SCHEME . '://' .
-               ContextConnection::DEFAULT_HOST . ':' .
-               ContextConnection::DEFAULT_PORT;
+        return $this->getTransport() . '://' . $this->getAddress() . ':' . $this->getPort();
     }
 
     /**
