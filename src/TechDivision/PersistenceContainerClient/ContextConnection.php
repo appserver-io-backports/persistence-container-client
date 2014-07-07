@@ -109,7 +109,7 @@ class ContextConnection implements Connection
         $this->sessions = new \ArrayObject();
 
         // initialize the connection base URL
-        $this->client = new Client();
+        $this->client = new Client($this->getDefaultBaseUrl());
     }
 
     /**
@@ -193,12 +193,10 @@ class ContextConnection implements Connection
         // serialize the remote method and write it to the socket
         $packed = RemoteMethodProtocol::pack($remoteMethod);
 
-        error_log($packed);
-
         // send a POST request
-        $response = $this->client->post($this->getDefaultBaseUrl(), null, $packed);
-
-        error_log(print_r($response, true));
+        $request = $this->client->post('/' . $this->appName . '/index.pc');
+        $request->setBody($packed);
+        $response = $request->send();
 
         // read the remote method call result
         $result = RemoteMethodProtocol::unpack($response->getBody());
@@ -223,8 +221,7 @@ class ContextConnection implements Connection
         // initialize the requeste URL with the default connection values
         return ContextConnection::DEFAULT_SCHEME . '://' .
                ContextConnection::DEFAULT_HOST . ':' .
-               ContextConnection::DEFAULT_PORT . '/' .
-               $this->appName . '/index.pc';
+               ContextConnection::DEFAULT_PORT;
     }
 
     /**
