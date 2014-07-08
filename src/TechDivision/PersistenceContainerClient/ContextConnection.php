@@ -118,6 +118,8 @@ class ContextConnection implements Connection
      * Initializes the connection.
      *
      * @param string $appName Name of the webapp using this client connection
+     *
+     * @return void
      */
     public function __construct($appName = '')
     {
