@@ -24,6 +24,7 @@ namespace TechDivision\PersistenceContainerClient;
 
 
 use Guzzle\Http\Client;
+use Guzzle\Http\Exception\CurlException;
 use TechDivision\PersistenceContainerClientContextSession;
 use TechDivision\PersistenceContainerClientConnection;
 use TechDivision\PersistenceContainerProtocol\RemoteMethod;
@@ -285,10 +286,30 @@ class ContextConnection implements Connection
         // serialize the remote method and write it to the socket
         $packed = RemoteMethodProtocol::pack($remoteMethod);
 
-        // send a POST request
-        $request = $this->getSocket()->post($this->getPath());
-        $request->setBody($packed);
-        $response = $request->send();
+        // invoke the RMC with a number of retries
+        $maxRetries = 0;
+        $retry = true;
+        while ($retry) {
+
+            try {
+
+                // send a POST request
+                $request = $this->getSocket()->post($this->getPath(), array('timeout' => 5));
+                $request->setBody($packed);
+                $response = $request->send();
+
+                $retry = false;
+
+            } catch (CurlException $ce) {
+
+                $maxRetries++;
+
+                if ($maxRetries >= 5) {
+                    $retry = false;
+                    throw $ce;
+                }
+            }
+        }
 
         // read the remote method call result
         $result = RemoteMethodProtocol::unpack($response->getBody());
