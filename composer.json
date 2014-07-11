@@ -9,7 +9,7 @@
     },
     "autoload": {
         "psr-0": {
-            "TechDivision": ["src/", "tests/"]      
+            "TechDivision\\PersistenceContainerClient": ["src/", "tests/"]      
         }
     },
     "config":{
