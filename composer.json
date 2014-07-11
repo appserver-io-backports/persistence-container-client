@@ -1,21 +1,16 @@
 {
     "name": "techdivision/persistencecontainerclient",
-    "type": "package",
     "description": "Client to connect to a PHP ApplicationServer based persistence container.",
     "homepage": "https://github.com/techdivision/TechDivision_PersistenceContainerClient",
     "license": [ "OSL-3.0" ],
-    "repositories": [
-        {
-            "type": "vcs",
-            "url": "https://github.com/techdivision/TechDivision_PersistenceContainerClient"
-        }
-    ],
     "require": {
-        "php" : ">=5.4.0",
-        "techdivision/persistencecontainerprotocol": "dev-master"
+        "php": ">=5.4.0",
+        "techdivision/persistencecontainerprotocol": "0.1.*"
     },
     "autoload": {
-        "psr-0": { "TechDivision": "src/" }
+        "psr-0": {
+            "TechDivision": ["src/", "tests/"]      
+        }
     },
     "config":{
         "github-oauth":{
