@@ -22,7 +22,9 @@
 
 namespace TechDivision\PersistenceContainerClient;
 
-use TechDivision\Server\Sockets\StreamSocket;
+
+use Guzzle\Http\Client;
+use Guzzle\Http\Exception\CurlException;
 use TechDivision\PersistenceContainerClientContextSession;
 use TechDivision\PersistenceContainerClientConnection;
 use TechDivision\PersistenceContainerProtocol\RemoteMethod;
@@ -48,21 +50,42 @@ class ContextConnection implements Connection
      *
      * @var string
      */
-    protected $transport = 'tcp';
+    const DEFAULT_SCHEME = 'http';
+
+    /**
+     * The default client sockets IP address.
+     *
+     * @var string
+     */
+    const DEFAULT_HOST = '127.0.0.1';
+
+    /**
+     * The default client sockets port.
+     *
+     * @var integer
+     */
+    const DEFAULT_PORT = 8585;
+
+    /**
+     * The default transport to use.
+     *
+     * @var string
+     */
+    protected $transport = ContextConnection::DEFAULT_SCHEME;
 
     /**
      * The client socket's IP address.
      *
      * @var string
      */
-    protected $address = '127.0.0.1';
+    protected $address = ContextConnection::DEFAULT_HOST;
 
     /**
      * The client socket's port.
      *
      * @var integer
      */
-    protected $port = 8585;
+    protected $port = ContextConnection::DEFAULT_PORT;
 
     /**
      * The name of the webapp using this client connection.
@@ -79,13 +102,6 @@ class ContextConnection implements Connection
     protected $sessions = null;
 
     /**
-     * The client socket instance.
-     *
-     * @var \TechDivision\Socket\Client
-     */
-    protected $client = null;
-
-    /**
      * Parser to process the remote method call.
      *
      * @var \TechDivision\PersistenceContainerProtocol\RemoteMethodCallParser
@@ -93,9 +109,18 @@ class ContextConnection implements Connection
     protected $parser;
 
     /**
+     * The HTTP client we use for connection to the persistence container.
+     *
+     * @var \Guzzle\Http\Client
+     */
+    protected $client;
+
+    /**
      * Initializes the connection.
      *
      * @param string $appName Name of the webapp using this client connection
+     *
+     * @return void
      */
     public function __construct($appName = '')
     {
@@ -116,6 +141,28 @@ class ContextConnection implements Connection
     public function getParser()
     {
         return $this->parser;
+    }
+
+    /**
+     * Sets the clients webapp name
+     *
+     * @param string $appName Name of the webapp using this client connection
+     *
+     * @return void
+     */
+    public function setAppName($appName)
+    {
+        $this->appName = $appName;
+    }
+
+    /**
+     * Returns the name of the webapp this connection is for
+     *
+     * @return string The webapp name
+     */
+    public function getAppName()
+    {
+        return $this->appName;
     }
 
     /**
@@ -185,34 +232,13 @@ class ContextConnection implements Connection
     }
 
     /**
-     * Sets the clients webapp name
-     *
-     * @param string $appName Name of the webapp using this client connection
-     *
-     * @return void
-     */
-    public function setAppName($appName)
-    {
-        $this->appName = $appName;
-    }
-
-    /**
-     * Returns the name of the webapp this connection is for
-     *
-     * @return string The webapp name
-     */
-    public function getAppName()
-    {
-        return $this->appName;
-    }
-
-    /**
      * Creates the connection to the container.
      *
      * @return void
      */
     public function connect()
     {
+        $this->client = new Client($this->getBaseUrl());
     }
 
     /**
@@ -222,15 +248,17 @@ class ContextConnection implements Connection
      */
     public function disconnect()
     {
+        $this->client = null;
     }
 
     /**
      * Returns the socket the connection is based on.
      *
-     * @return \TechDivision\Socket\Client The socket instance
+     * @return \Guzzle\Http\Client The socket instance
      */
     public function getSocket()
     {
+        return $this->client;
     }
 
     /**
@@ -244,10 +272,8 @@ class ContextConnection implements Connection
     public function send(RemoteMethod $remoteMethod)
     {
 
-        // connect to the persistence container
-        $clientConnection = StreamSocket::getClientInstance(
-            $this->getTransport() . '://' . $this->getAddress() . ':' . $this->getPort()
-        );
+        // connect to the server if necessary
+        $this->connect();
 
         // load the parser instance
         $parser = $this->getParser();
@@ -260,21 +286,63 @@ class ContextConnection implements Connection
         // serialize the remote method and write it to the socket
         $packed = RemoteMethodProtocol::pack($remoteMethod);
 
-        // invoke the remote method call
-        $clientConnection->write(RemoteMethodProtocol::prepareHeaderInvoke($packed));
-        $clientConnection->write($packed);
+        // invoke the RMC with a number of retries
+        $maxRetries = 0;
+        $retry = true;
+        while ($retry) {
 
-        // read the response
-        $contentLength = $parser->parseHeader($clientConnection->readLine());
-        $response = $parser->parseBody($clientConnection, $contentLength);
+            try {
+
+                // send a POST request
+                $request = $this->getSocket()->post($this->getPath(), array('timeout' => 5));
+                $request->setBody($packed);
+                $response = $request->send();
+
+                $retry = false;
+
+            } catch (CurlException $ce) {
+
+                $maxRetries++;
+
+                if ($maxRetries >= 5) {
+                    $retry = false;
+                    throw $ce;
+                }
+            }
+        }
+
+        // read the remote method call result
+        $result = RemoteMethodProtocol::unpack($response->getBody());
 
         // if an exception returns, throw it again
-        if ($response instanceof \Exception) {
-            throw $response;
+        if ($result instanceof \Exception) {
+            throw $result;
         }
 
         // close the connection and return the data
-        return $response;
+        return $result;
+    }
+
+    /**
+     * Prepares path for the connection to the persistence container.
+     *
+     * @return string The path to define the persistence container module
+     */
+    protected function getPath()
+    {
+        return '/' . $this->getAppName() . '/index.pc';
+    }
+
+    /**
+     * Prepares the base URL we used for the connection
+     * to the persistence container.
+     *
+     * @return string The default base URL
+     */
+    protected function getBaseUrl()
+    {
+        // initialize the requeste URL with the default connection values
+        return $this->getTransport() . '://' . $this->getAddress() . ':' . $this->getPort();
     }
 
     /**
