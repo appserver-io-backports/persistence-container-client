@@ -10,7 +10,7 @@
  * http://opensource.org/licenses/osl-3.0.php
  *
  * PHP version 5
- * 
+ *
  * @category  Library
  * @package   TechDivision_PersistenceContainerClient
  * @author    Tim Wagner <tw@techdivision.com>
@@ -24,7 +24,7 @@ namespace TechDivision\PersistenceContainerClient;
 
 /**
  * Connection factory to create a new context connection.
- * 
+ *
  * @category  Library
  * @package   TechDivision_PersistenceContainerClient
  * @author    Tim Wagner <tw@techdivision.com>
@@ -37,11 +37,13 @@ class ConnectionFactory
 {
 
     /**
-     * The instances as singletons.
+     * Private constructor to use class only in static context.
      *
-     * @var array
+     * @return void
      */
-    protected static $instance = array();
+    protected function __construct()
+    {
+    }
 
     /**
      * Simple factory to create a new context connection
@@ -53,9 +55,6 @@ class ConnectionFactory
      */
     public static function createContextConnection($appName)
     {
-        if (self::$instance[$appName] == null) {
-            self::$instance[$appName] = new ContextConnection($appName);
-        }
-        return self::$instance[$appName];
+        return new ContextConnection($appName);
     }
 }
