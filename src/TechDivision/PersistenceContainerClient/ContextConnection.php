@@ -22,11 +22,8 @@
 
 namespace TechDivision\PersistenceContainerClient;
 
-
 use Guzzle\Http\Client;
 use Guzzle\Http\Exception\CurlException;
-use TechDivision\PersistenceContainerClientContextSession;
-use TechDivision\PersistenceContainerClientConnection;
 use TechDivision\PersistenceContainerProtocol\RemoteMethod;
 use TechDivision\PersistenceContainerProtocol\RemoteMethodProtocol;
 use TechDivision\PersistenceContainerProtocol\RemoteMethodCallParser;
@@ -274,9 +271,6 @@ class ContextConnection implements Connection
 
         // connect to the server if necessary
         $this->connect();
-
-        // load the parser instance
-        $parser = $this->getParser();
 
         // set address + port + appName
         $remoteMethod->setAddress($this->getAddress());
