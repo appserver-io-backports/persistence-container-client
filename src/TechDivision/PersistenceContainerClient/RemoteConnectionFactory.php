@@ -1,7 +1,7 @@
 <?php
 
 /**
- * TechDivision\PersistenceContainerClient\ConnectionFactory
+ * TechDivision\PersistenceContainerClient\RemoteConnectionFactory
  *
  * NOTICE OF LICENSE
  *
@@ -22,8 +22,11 @@
 
 namespace TechDivision\PersistenceContainerClient;
 
+use TechDivision\Collections\ArrayList;
+use TechDivision\PersistenceContainerProtocol\RemoteMethodCallParser;
+
 /**
- * Connection factory to create a new context connection.
+ * Connection factory to create a new remote context connection.
  *
  * @category  Library
  * @package   TechDivision_PersistenceContainerClient
@@ -33,7 +36,7 @@ namespace TechDivision\PersistenceContainerClient;
  * @link      https://github.com/techdivision/TechDivision_PersistenceContainerClient
  * @link      http://www.appserver.io
  */
-class ConnectionFactory
+class RemoteConnectionFactory
 {
 
     /**
@@ -41,7 +44,7 @@ class ConnectionFactory
      *
      * @return void
      */
-    protected function __construct()
+    private function __construct()
     {
     }
 
@@ -49,12 +52,21 @@ class ConnectionFactory
      * Simple factory to create a new context connection
      * of the requested type.
      *
-     * @param string $appName Name of the webapp using this client connection
-     *
      * @return \TechDivision\PersistenceContainerClient\Connection The requested context connection
      */
-    public static function createContextConnection($appName)
+    public static function createContextConnection()
     {
-        return new ContextConnection($appName);
+
+        // initialize the remote method call parser and the session storage
+        $sessions = new ArrayList();
+        $parser = new RemoteMethodCallParser();
+
+        // initialize the remote context connection
+        $contextConnection = new RemoteContextConnection();
+        $contextConnection->injectParser($parser);
+        $contextConnection->injectSessions($sessions);
+
+        // return the initialized connection
+        return $contextConnection;
     }
 }

@@ -1,7 +1,7 @@
 <?php
 
 /**
- * TechDivision\PersistenceContainerClient\DummyTest
+ * TechDivision\PersistenceContainerClient\LocalConnectionFactory
  *
  * NOTICE OF LICENSE
  *
@@ -22,8 +22,10 @@
 
 namespace TechDivision\PersistenceContainerClient;
 
+use TechDivision\Collections\ArrayList;
+
 /**
- * Dummy test implementation.
+ * Connection factory to create a new local context connection.
  *
  * @category  Library
  * @package   TechDivision_PersistenceContainerClient
@@ -33,16 +35,35 @@ namespace TechDivision\PersistenceContainerClient;
  * @link      https://github.com/techdivision/TechDivision_PersistenceContainerClient
  * @link      http://www.appserver.io
  */
-class DummyTest extends \PHPUnit_Framework_TestCase
+class LocalConnectionFactory
 {
 
     /**
-     * Test is a dummy test integration.
+     * Private constructor to use class only in static context.
      *
      * @return void
      */
-    public function testDummy()
+    private function __construct()
     {
-        $this->assertTrue(true);
+    }
+
+    /**
+     * Simple factory to create a new context connection
+     * of the requested type.
+     *
+     * @return \TechDivision\PersistenceContainerClient\Connection The requested context connection
+     */
+    public static function createContextConnection()
+    {
+
+        // initialize the remote method call parser and the session storage
+        $sessions = new ArrayList();
+
+        // initialize the local context connection
+        $contextConnection = new LocalContextConnection();
+        $contextConnection->injectSessions($sessions);
+
+        // return the initialized connection
+        return $contextConnection;
     }
 }
