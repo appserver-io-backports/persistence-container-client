@@ -1,7 +1,7 @@
 <?php
 
 /**
- * TechDivision\PersistenceContainerClient\Context\ContextConnection
+ * TechDivision\PersistenceContainerClient\Context\RemoteContextConnection
  *
  * NOTICE OF LICENSE
  *
@@ -24,6 +24,7 @@ namespace TechDivision\PersistenceContainerClient;
 
 use Guzzle\Http\Client;
 use Guzzle\Http\Exception\CurlException;
+use TechDivision\Collections\Collection;
 use TechDivision\PersistenceContainerProtocol\RemoteMethod;
 use TechDivision\PersistenceContainerProtocol\RemoteMethodProtocol;
 use TechDivision\PersistenceContainerProtocol\RemoteMethodCallParser;
@@ -39,7 +40,7 @@ use TechDivision\PersistenceContainerProtocol\RemoteMethodCallParser;
  * @link      https://github.com/techdivision/TechDivision_PersistenceContainerClient
  * @link      http://www.appserver.io
  */
-class ContextConnection implements Connection
+class RemoteContextConnection implements Connection
 {
 
     /**
@@ -68,21 +69,21 @@ class ContextConnection implements Connection
      *
      * @var string
      */
-    protected $transport = ContextConnection::DEFAULT_SCHEME;
+    protected $transport = RemoteContextConnection::DEFAULT_SCHEME;
 
     /**
      * The client socket's IP address.
      *
      * @var string
      */
-    protected $address = ContextConnection::DEFAULT_HOST;
+    protected $address = RemoteContextConnection::DEFAULT_HOST;
 
     /**
      * The client socket's port.
      *
      * @var integer
      */
-    protected $port = ContextConnection::DEFAULT_PORT;
+    protected $port = RemoteContextConnection::DEFAULT_PORT;
 
     /**
      * The name of the webapp using this client connection.
@@ -92,9 +93,9 @@ class ContextConnection implements Connection
     protected $appName;
 
     /**
-     * The ArrayObject for the sessions.
+     * The storage for the sessions.
      *
-     * @var \ArrayObject
+     * @var \TechDivision\Collections\Collection
      */
     protected $sessions = null;
 
@@ -113,21 +114,37 @@ class ContextConnection implements Connection
     protected $client;
 
     /**
-     * Initializes the connection.
+     * Injects the collection for the sessions.
      *
-     * @param string $appName Name of the webapp using this client connection
+     * @param \TechDivision\Collections\Collection $sessions The collection for the sessions
      *
      * @return void
      */
-    public function __construct($appName = '')
+    public function injectSessions(Collection $sessions)
     {
+        $this->sessions = $sessions;
+    }
 
-        // set the application name
-        $this->appName = $appName;
+    /**
+     * Returns the collection with the sessions.
+     *
+     * @return \TechDivision\Collections\Collection The collection with the sessions
+     */
+    public function getSessions()
+    {
+        return $this->sessions;
+    }
 
-        // initialize the remote method call parser and the session
-        $this->parser = new RemoteMethodCallParser();
-        $this->sessions = new \ArrayObject();
+    /**
+     * Injects the remote method call parser.
+     *
+     * @param \TechDivision\PersistenceContainerProtocol\RemoteMethodCallParser $parser The remote method call parser
+     *
+     * @return void
+     */
+    public function injectParser(RemoteMethodCallParser $parser)
+    {
+        $this->parser = $parser;
     }
 
     /**
@@ -147,7 +164,7 @@ class ContextConnection implements Connection
      *
      * @return void
      */
-    public function setAppName($appName)
+    public function injectAppName($appName)
     {
         $this->appName = $appName;
     }
@@ -169,7 +186,7 @@ class ContextConnection implements Connection
      *
      * @return void
      */
-    public function setAddress($address)
+    public function injectAddress($address)
     {
         $this->address = $address;
     }
@@ -191,7 +208,7 @@ class ContextConnection implements Connection
      *
      * @return void
      */
-    public function setPort($port)
+    public function injectPort($port)
     {
         $this->port = $port;
     }
@@ -213,7 +230,7 @@ class ContextConnection implements Connection
      *
      * @return void
      */
-    public function setTransport($transport)
+    public function injectTransport($transport)
     {
         $this->transport = $transport;
     }
@@ -347,6 +364,7 @@ class ContextConnection implements Connection
      */
     public function createContextSession()
     {
-        return $this->sessions[] = new ContextSession($this);
+        $this->sessions->add($session = new ContextSession($this));
+        return $session;
     }
 }

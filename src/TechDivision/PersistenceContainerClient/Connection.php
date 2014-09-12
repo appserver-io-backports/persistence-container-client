@@ -10,7 +10,7 @@
  * http://opensource.org/licenses/osl-3.0.php
  *
  * PHP version 5
- * 
+ *
  * @category  Library
  * @package   TechDivision_PersistenceContainerClient
  * @author    Tim Wagner <tw@techdivision.com>
@@ -26,7 +26,7 @@ use TechDivision\PersistenceContainerProtocol\RemoteMethod;
 
 /**
  * The interface for the remote connection.
- * 
+ *
  * @category  Library
  * @package   TechDivision_PersistenceContainerClient
  * @author    Tim Wagner <tw@techdivision.com>
@@ -37,20 +37,6 @@ use TechDivision\PersistenceContainerProtocol\RemoteMethod;
  */
 interface Connection
 {
-
-    /**
-     * Creates the connection to the container.
-     *
-     * @return void
-     */
-    public function connect();
-
-    /**
-     * Shutdown the connection to the container.
-     *
-     * @return void
-     */
-    public function disconnect();
 
     /**
      * Sends the remote method call to the container instance.
@@ -67,11 +53,4 @@ interface Connection
      * @return \TechDivision\PersistenceContainerProtocol\Session The session instance
      */
     public function createContextSession();
-
-    /**
-     * Returns the socket the connection is based on.
-     *
-     * @return \TechDivision\Socket\Client The socket instance
-     */
-    public function getSocket();
 }

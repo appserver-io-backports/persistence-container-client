@@ -1,7 +1,7 @@
 <?php
 
 /**
- * TechDivision\PersistenceContainerClient\ContextConnectionTest
+ * TechDivision\PersistenceContainerClient\RemoteContextConnectionTest
  *
  * NOTICE OF LICENSE
  *
@@ -33,7 +33,7 @@ namespace TechDivision\PersistenceContainerClient;
  * @link      https://github.com/techdivision/TechDivision_PersistenceContainerClient
  * @link      http://www.appserver.io
  */
-class ContextConnectionTest extends \PHPUnit_Framework_TestCase
+class RemoteContextConnectionTest extends \PHPUnit_Framework_TestCase
 {
 
     /**
@@ -58,14 +58,31 @@ class ContextConnectionTest extends \PHPUnit_Framework_TestCase
     const PORT = 1234;
 
     /**
+     * The instance we want to test.
+     *
+     * @var \TechDivision\PersistenceContainerClient\RemoteContextConnection
+     */
+    protected $contextConnection;
+
+    /**
+     * Initialize the context connection instance we want to test.
+     *
+     * @return void
+     */
+    protected function setUp()
+    {
+        $this->contextConnection = new RemoteContextConnection();
+    }
+
+    /**
      * Tests the constructor of the context connection.
      *
      * @return void
      */
-    public function testConstructor()
+    public function testSetterAndGetterForAppName()
     {
-        $contextConnection = $this->getMock(ContextConnection::class, null, array(ContextConnectionTest::APP_NAME));
-        $this->assertEquals(ContextConnectionTest::APP_NAME, $contextConnection->getAppName());
+        $this->contextConnection->injectAppName(RemoteContextConnectionTest::APP_NAME);
+        $this->assertEquals(RemoteContextConnectionTest::APP_NAME, $this->contextConnection->getAppName());
     }
 
     /**
@@ -75,9 +92,8 @@ class ContextConnectionTest extends \PHPUnit_Framework_TestCase
      */
     public function testSetterAndGetterForAddress()
     {
-        $contextConnection = $this->getMock(ContextConnection::class, null, array(ContextConnectionTest::APP_NAME));
-        $contextConnection->setAddress(ContextConnectionTest::ADDRESS);
-        $this->assertSame(ContextConnectionTest::ADDRESS, $contextConnection->getAddress());
+        $this->contextConnection->injectAddress(RemoteContextConnectionTest::ADDRESS);
+        $this->assertSame(RemoteContextConnectionTest::ADDRESS, $this->contextConnection->getAddress());
     }
 
     /**
@@ -87,8 +103,7 @@ class ContextConnectionTest extends \PHPUnit_Framework_TestCase
      */
     public function testSetterAndGetterForPort()
     {
-        $contextConnection = $this->getMock(ContextConnection::class, null, array(ContextConnectionTest::APP_NAME));
-        $contextConnection->setPort(ContextConnectionTest::PORT);
-        $this->assertSame(ContextConnectionTest::PORT, $contextConnection->getPort());
+        $this->contextConnection->injectPort(RemoteContextConnectionTest::PORT);
+        $this->assertSame(RemoteContextConnectionTest::PORT, $this->contextConnection->getPort());
     }
 }

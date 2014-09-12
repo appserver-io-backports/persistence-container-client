@@ -12,12 +12,13 @@
 	],
 	"require" : {
 		"php" : ">=5.4.0",
-		"techdivision/persistencecontainerprotocol" : "0.2.*",
-		"guzzle/guzzle" : "3.9.*"
+		"guzzle/guzzle" : "3.9.*",
+        "techdivision/persistencecontainerprotocol" : "0.2.*"
 	},
 	"require-dev" : {
 		"phpunit/phpunit" : "3.7.*",
-		"appserver-io/build" : "0.1.*"
+		"appserver-io/build" : "0.1.*",
+		"techdivision/application" : "0.2.*"
 	},
 	"autoload" : {
 		"psr-0" : {
