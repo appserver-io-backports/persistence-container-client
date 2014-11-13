@@ -1,3 +1,13 @@
+# Version 0.7.1
+
+## Bugfixes
+
+* None
+
+## Features
+
+* Switch to new NamingDirectory integeration
+
 # Version 0.7.0
 
 ## Bugfixes

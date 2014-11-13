@@ -114,15 +114,16 @@ class LocalContextConnection implements Connection
 
         // load the application context and the bean manager
         $application = $this->getApplication();
-        $beanManager = $application->getManager(BeanContext::IDENTIFIER);
-
-        // lock the container and lookup the bean instance
-        $instance = $beanManager->locate($remoteMethod, array($application));
 
         // prepare method name and parameters and invoke method
+        $className = $remoteMethod->getClassName();
         $methodName = $remoteMethod->getMethodName();
         $parameters = $remoteMethod->getParameters();
         $sessionId = $remoteMethod->getSessionId();
+
+        // load the bean manager and the bean instance
+        $beanManager = $application->getNamingDirectory()->search(BeanContext::IDENTIFIER);
+        $instance = $application->getNamingDirectory()->search($className, array($sessionId, array($application)));
 
         // invoke the remote method call on the local instance
         $response = call_user_func_array(array($instance, $methodName), $parameters);
