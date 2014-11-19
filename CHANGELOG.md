@@ -1,3 +1,13 @@
+# Version 0.7.2
+
+## Bugfixes
+
+* None
+
+## Features
+
+* Use application context to lookup BeanContext
+
 # Version 0.7.1
 
 ## Bugfixes
